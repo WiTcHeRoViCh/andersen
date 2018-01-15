@@ -1,0 +1,160 @@
+//1 
+current_time = new Date;
+console.log("Today is: "+current_time.toLocaleString("en-Us", {weekday:'long'}));
+console.log("Current Time: " + current_time.toLocaleString('en-US', { hour: 'numeric', hour12: true}) + " "
+	+current_time.toLocaleString('en-US', { minute: 'numeric', second: 'numeric'}))
+
+//2
+window.print()
+
+//3
+current_time = new Date;
+
+yyyy = current_time.getFullYear();
+dd = current_time.getDay();
+mm = current_time.getMonth()+1;
+
+console.log(mm+ '-' + dd+ '-' +yyyy);
+console.log(mm+ '/' +dd+ ' ' +yyyy);
+
+//4
+var a = 5, b = 6, c = 7;
+
+var p = (a+b+c)/2;
+
+console.log( Math.sqrt(p*(p-a)*(p-b)*(p-c)) )
+
+//5
+for (i = 0;i<10;i++){
+	setInterval(function(){
+	  text = text[text.length-1] + text.substring(0, text.length - 1);
+	  console.log(text)
+	},100)
+}
+
+//6
+current_year = new Date().getFullYear()
+day = new Date(current_year, 2, 0).getDate()
+
+if (day == 29){
+	console.log("Leap year")
+}
+else{
+	console.log("no")
+}
+
+//7
+count = 0;
+for (i=2014;i<2050;i++) {
+  year = new Date(i, 0, 2);
+  if (year.getDay() == 0) count++;
+}
+console.log(count);
+
+//8
+rand_int = Math.floor(Math.random() * (9)) + 1;
+user_number = +prompt("Write number:", 0)
+if (rand_int === user_number){
+  console.log("Good work")
+}
+else{
+  console.log("Not matched");
+}
+
+//9
+current_time = new Date();
+current_year = current_time.getFullYear();
+next_christmas = new Date(current_year, 11, 26);
+day_to_christmas = (( next_christmas - current_time )/3600000)/24;
+
+console.log(day_to_christmas)
+
+//10
+num1 = document.getElementById("num1").value;
+num2 = document.getElementById("num2").value
+
+mul_btn = document.getElementById("mul_btn");
+div_btn = document.getElementById("div_btn");
+
+mul_btn.click = function(){
+  showResult(num1*num2)
+}
+
+div_btn.click = function(){
+  showResult(num1/num2)
+}
+
+function showResult(result){
+  div_result = document.getElementById("div_result");
+  div_result.innerHTML = result;
+}
+
+//11
+function fromFtoC(fahrenheit){
+  C = (fahrenheit - 32)*5/9;
+  return C;
+}
+
+function fromCtoF (celsium) {
+  F = (celsium*9)/5 + 32;
+  return F
+}
+
+fromCtoF(0)  //32
+fromFtoC(32) //0
+
+//12
+window.location.toString()
+
+//13
+variable = prompt("Write variable", "");
+this[variable] = "";
+
+//14
+file_name = "file.name";
+extension = file_name.split(".").pop();
+console.log(extension);
+
+//15
+number = +prompt("Write number",0);
+if (number > 13){
+  console.log((number-13) * 2);
+}
+else{
+  console.log(13-number);
+}
+
+//16
+function getSum(a, b){
+  if (a == b){
+    return (a+b)*3;
+  }
+  return a+b;
+}
+
+//17
+function getDiffer(num){
+  CONST_NUM = 19;
+  if (num > CONST_NUM){
+    return (num-CONST_NUM)*3;
+  }
+  return CONST_NUM - num;
+}
+
+//18
+function checkNumber(a, b) {
+  if (a+b == 50 || a == 50 || b == 50) {
+    return true;
+  }
+  return false;
+}
+
+//19
+function checkWithin(a){
+  return (Math.abs(100 - a) <= 20 || Math.abs(400-a) <= 20);
+}
+
+//20
+function checkForPosNeg(a, b){
+  return ( (a >= 0 && b < 0) || (a < 0 && b >= 0) )
+}
