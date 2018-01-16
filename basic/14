@@ -1,0 +1,4 @@
+file_name = "file.name";
+extension = file_name.split(".").pop();
+console.log(extension);
+
