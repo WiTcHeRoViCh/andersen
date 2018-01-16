@@ -1,4 +1,4 @@
-count = 0;
+var year, count = 0;
 for (i=2014;i<2050;i++) {
   year = new Date(i, 0, 2);
   if (year.getDay() == 0) count++;

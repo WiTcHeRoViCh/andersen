@@ -1,5 +1,5 @@
-rand_int = Math.floor(Math.random() * (9)) + 1;
-user_number = +prompt("Write number:", 0)
+var rand_int = Math.floor(Math.random() * (9)) + 1;
+var user_number = +prompt("Write number:", 0)
 if (rand_int === user_number){
   console.log("Good work")
 }

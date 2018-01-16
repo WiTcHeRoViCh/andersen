@@ -1,10 +1,10 @@
 function fromFtoC(fahrenheit){
-  C = (fahrenheit - 32)*5/9;
+  var C = (fahrenheit - 32)*5/9;
   return C;
 }
 
 function fromCtoF (celsium) {
-  F = (celsium*9)/5 + 32;
+  var F = (celsium*9)/5 + 32;
   return F
 }
 

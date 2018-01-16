@@ -1,5 +1,5 @@
 function getDiffer(num){
-  CONST_NUM = 19;
+  var CONST_NUM = 19;
   if (num > CONST_NUM){
     return (num-CONST_NUM)*3;
   }

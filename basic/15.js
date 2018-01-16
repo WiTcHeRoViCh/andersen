@@ -1,4 +1,4 @@
-number = +prompt("Write number",0);
+var number = +prompt("Write number",0);
 if (number > 13){
   console.log((number-13) * 2);
 }

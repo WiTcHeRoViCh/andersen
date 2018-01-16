@@ -15,28 +15,28 @@
   </body>
     <script>
 
-      mul_btn = document.getElementById("mul_btn");
-      div_btn = document.getElementById("div_btn");
+      var mul_btn = document.getElementById("mul_btn");
+      var div_btn = document.getElementById("div_btn");
 
       mul_btn.onclick = function(){
-        numbers = getInputNumbers();
+        var numbers = getInputNumbers();
         showResult(+numbers[0]*+numbers[1])
       }
 
       div_btn.onclick = function(){
-        numbers = getInputNumbers();
+        var numbers = getInputNumbers();
         showResult(+numbers[0]/+numbers[1])
       }
 
       function getInputNumbers() {
-        num1 = document.getElementById("num1").value || 0;
-        num2 = document.getElementById("num2").value || 0;
+        var num1 = document.getElementById("num1").value || 0;
+        var num2 = document.getElementById("num2").value || 0;
 
         return [num1, num2]
       }
 
       function showResult(result){
-        div_result = document.getElementById("div_result");
+        var div_result = document.getElementById("div_result");
         div_result.innerHTML = result;
       }
     </script>
