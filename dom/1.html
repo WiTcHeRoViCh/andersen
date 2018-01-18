@@ -1,0 +1,102 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<script>
+			window.onload = function (){
+				createBoard();
+			}
+
+			function createBoard(){
+				var board = document.getElementById("board");
+				var print_board_btn = document.getElementById("print_board_btn");
+				var revers_color_btn = document.getElementById("revers_color_btn");
+
+				print_board_btn.onclick = function(){
+					var row = document.getElementById("row").value;
+					var col = document.getElementById("col").value;
+
+					board.innerHTML = "";
+
+					for (var i = 0; i < col; i++){
+						var tr = document.createElement('tr');
+						for (var j = 0; j < row;j++){
+							var td = document.createElement('td');
+
+							td.className = "square";
+							td.style.backgroundColor = "white";
+
+							tr.appendChild(td);							
+						}
+						board.innerHTML += tr.innerHTML;
+					}
+					var els = document.getElementsByClassName("square")
+					Array.prototype.forEach.call(els, function(el){
+						el.onclick = reverseColor;
+					})
+				}
+
+				board.onclick = function(event) {
+					var elem = event.target;
+
+					if (elem.className == "square"){
+						elem.onclick = reverseColor;
+						elem.onclick(elem);
+					}
+				}
+
+				revers_color_btn.onclick = function(){
+					var els = document.getElementsByClassName("square")
+					Array.prototype.forEach.call(els, function(el){
+						el.onclick(el);
+					})
+
+				}
+
+				function reverseColor(elem){
+					if (elem.style.backgroundColor == "white"){
+						elem.style.backgroundColor = "black";
+					}
+					else {
+						elem.style.backgroundColor = "white";
+					}
+				}
+			}
+		</script>
+
+		<style>
+			.square{
+				height: 28px;
+				width: 24px;
+				border: 1px solid gray;
+				border-radius: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<table>
+			<tbody id = "board">
+				
+			</tbody>
+		</table>
+
+		</br>
+
+		Row: <input type="field" id="row" value="0">
+
+		</br>
+		
+		Col: <input type="field" id="col" value="0">
+		
+		<p></p>
+		
+		<button id="print_board_btn">Print board</button>
+
+		<p></p>
+		
+		<button id="revers_color_btn">Revers color</button>
+
+
+	</body>
+</html>
