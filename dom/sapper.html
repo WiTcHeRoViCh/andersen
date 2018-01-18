@@ -1,0 +1,361 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<script>
+			window.onload = function (){
+				createBoard();
+			}
+
+			function createBoard(){
+				var board = document.getElementById("board");
+				var print_board_btn = document.getElementById("print_board_btn");
+
+				var custom_settings = document.getElementById("custom_settings");
+				var settings = document.getElementById("settings");
+				settings.style.display = "none";
+
+				var easy = document.getElementById("easy");
+				var middle = document.getElementById("middle");
+				var hard = document.getElementById("hard");
+
+				var difficulty = "";
+
+				var reset = document.getElementById("reset");
+
+				var all_mines_cell;
+				var all_empty_cell;
+				var all_mines_amount = document.getElementById("all_mines_amount");
+
+
+				//difficulty
+				easy.onclick = function(){
+					difficulty = "easy";
+					var MINES = 25;
+					print_board_btn.onclick(null, 10, 10, MINES);
+					all_mines_amount.innerHTML = MINES;
+				}
+
+				middle.onclick = function (){
+					difficulty = "middle";
+					var MINES = 100;
+					print_board_btn.onclick(null, 20, 20, MINES);
+					all_mines_amount.innerHTML = MINES;
+				}
+
+				hard.onclick = function (){
+					difficulty = "hard";
+					var MINES = 150;
+					print_board_btn.onclick(null, 40, 40, MINES);
+					all_mines_amount.innerHTML = MINES;
+				}
+
+				//display or hide custom settings
+				custom_settings.onclick = function(){
+					var elem = settings;
+
+					(elem.style.display == "none") ? elem.style.display = "block" : elem.style.display = "none"; 
+				}
+
+				//print board
+				print_board_btn.onclick = function(event, row, col, mines){
+					row = row || document.getElementById("row").value;
+					col = col || document.getElementById("col").value;
+					mines = mines || document.getElementById("mines_field").value;
+
+					if (event){
+						difficulty = "custom";
+						settings.style.display = "none";
+						all_mines_amount.innerHTML = mines;
+					}
+
+
+					board.innerHTML = "";
+
+					for (var i = 0; i < col; i++){
+						var tr = document.createElement('tr');
+						for (var j = 0; j < row;j++){
+							var td = document.createElement('td');
+
+							td.className = "square";
+							td.style.backgroundColor = "#d8d8d8";
+
+							tr.appendChild(td);							
+						}
+						board.innerHTML += tr.innerHTML;
+					}
+
+					var els = document.getElementsByClassName("square");
+
+					Array.prototype.forEach.call(els, function(el){
+						el.oncontextmenu = setFlag;
+					});
+
+					setMines(mines);
+
+					all_mines_cell = [].slice.call(els).filter(function(el){
+						return el.className.includes("mine");
+					});
+
+					all_empty_cell = [].slice.call(els).filter(function(el){
+						return !el.className.includes("mine");
+					});
+				}
+
+				board.onclick = function(event) {
+					var elem = event.target;
+
+					if (elem.className.includes("square") ){
+						if (checkOnMine(elem) ){
+							step(elem);
+						}
+						else {
+							reset.onclick();
+						}
+
+					}
+				}
+
+				//reset game
+				reset.onclick = function(){
+					switch(difficulty){
+						case "easy":   easy.onclick();   break;
+						case "middle": middle.onclick(); break;
+						case "hard":   hard.onclick();   break;
+						case "custom": print_board_btn.onclick(true); break;
+					}
+				}
+
+
+				//find the nearest elements of the current element
+				function findNearest(elem){
+					var near = [];
+					var squares = [].slice.call( document.getElementsByClassName("square") );
+					var elem_idx_sqr = squares.indexOf(elem);
+
+					var row = getBoardRow();
+					var save_row = row;
+
+					var tr_elems = [].slice.call( document.getElementsByClassName("square")[elem_idx_sqr].parentElement.children );
+					var elem_idx_tr = tr_elems.indexOf(elem);
+
+					for (var i = -1; i < 2; i++){
+						var cur_tr_check = document.getElementsByClassName("square")[elem_idx_sqr+row*i];
+
+						if (cur_tr_check){
+							var cur_tr = cur_tr_check.parentElement;
+
+							for (var j = -1; j < 2; j++){
+								var near_elem = cur_tr.children[elem_idx_tr + j];
+								if (near_elem && near_elem != elem){
+									near.push(near_elem);
+								}
+							}
+
+						}
+					}
+					return near;
+				}
+
+				function getBoardRow(){
+					var row = document.getElementById("board").firstChild.children.length;
+					return row;
+				}
+
+
+				//find nearest elem, set numbers of mines, crean cells, 
+				function step(elem){
+					var nearest = findNearest(elem);
+					var nearest_mines;
+					var nearest_empty = [];
+
+					nearest_mines = nearMines(nearest);
+
+					if (isMine(elem) || !isNoClean(elem)) return
+
+					if (nearest_mines.length > 0){
+						elem.innerHTML = nearest_mines.length;
+					}
+					elem.style.backgroundColor = "white";
+					elem.className = "square clean";
+
+					all_empty_cell.splice(all_empty_cell.indexOf(elem), 1);
+					checkIfEmptyCellExist();
+					
+					for (var j = 0; j < nearest.length; j++){
+						var near_elem = nearest[j];
+						var was_mine = false;
+						for (var i = 0; i < nearest.length; i++){
+							if (isMine(nearest[i])) was_mine = true;
+
+							if (!isMine(nearest[i]) && isNoClean(elem)){
+								nearest[i].style.backgroundColor = "white";
+								nearest[i].className = "square clean";
+
+								all_empty_cell.splice(all_empty_cell.indexOf(nearest[i]), 1);
+								checkIfEmptyCellExist();
+							}
+						}
+						if (!was_mine) step(near_elem);
+					}
+				}
+
+				function isMine(elem){
+					return elem.className.includes("mine") ? true : false;
+				}
+
+				function isNoClean(elem){
+					return !elem.className.includes("clean") ? true : false;
+				}
+
+				//check all elements on mine and return array with mines
+				function nearMines(elems){
+					var result = [];
+
+					[].forEach.call(elems, function(el){
+						if (el.className.includes("mine")){
+							result.push(el);
+						}
+					});
+					return result;
+				}
+
+				//check if you click on mine
+				function checkOnMine(elem){
+					if (elem.className.includes("mine")){
+						alert("\"MY LEGS... I DON'T FEEL MY LEGS...\"\n\"Because you do not have them...\"\n Major Payne");
+						return false;
+					}
+					return true;
+				}
+
+				function setMines(count){
+					var squares = document.getElementsByClassName("square");
+
+					for (var i = 0; i < count; i++){
+							var j = Math.floor(Math.random() * squares.length);
+							
+							do {
+								if (!squares[j].className.includes("mine")){
+									squares[j].className += " mine";
+									//squares[j].innerHTML +="1";
+								}
+								else{
+									j = Math.floor(Math.random() * squares.length);
+								}
+							} while (squares[j].className.includes("mine"))
+					}
+				}
+
+				function setFlag(event){
+					var elem = event.target;
+					if (!elem.className.includes("clean")){
+						if (elem.style.backgroundColor == "rgb(216, 216, 216)" && elem.style.backgroundColor != "white"){
+							elem.style.backgroundColor = "red";
+
+							all_mines_cell.splice(all_mines_cell.indexOf(elem), 1);
+							
+							if (all_mines_cell.length == 0) {
+								congratulations()
+							}
+
+							all_mines_amount.innerHTML -=1;
+						}
+						else {
+							elem.style.backgroundColor = "rgb(216, 216, 216)";
+
+							all_mines_cell.push(elem);
+							all_mines_amount.innerHTML = +all_mines_amount.innerHTML + 1;
+						}
+					}
+				}
+
+				function checkIfEmptyCellExist(){
+					if (all_empty_cell.length == 0){
+						congratulations();
+					}
+				}
+
+				function congratulations(){
+					switch(difficulty){
+						case "easy":   alert("It was so easy that the child would cope with this)\nTime to grow up"); middle.onclick(); break;
+						case "middle": alert("Nice work, guy!\nBut not perfect"); hard.onclick(); break;
+						case "hard":   alert("You won! You are a real man!\nNow try really hard game)"); print_board_btn.onclick(true, 50, 50, 1000); break;
+						case "custom": 
+							if (document.getElementById("row").value > 40 && document.getElementById("col").value > 40){
+								alert("It was very hard work, but you did it. I'm very proud of you");
+							}
+							else{
+								alert("You won. I hope it was good difficulty");
+							}
+							reset.onclick();
+					}
+				}
+
+
+			}
+		</script>
+
+		<style>
+			.square{
+				height: 28px;
+				width: 24px;
+				border: 1px solid gray;
+				border-radius: 5px;
+			}
+
+			#custom_settings_div {
+				display: inline;
+			}
+
+			#settings {
+				position: absolute;
+				margin-top: 15px;
+			}
+
+			#reset {
+				margin-left: 20px;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<table>
+			<tbody id = "board">
+				
+			</tbody>
+		</table>
+		Mines left: <span id ="all_mines_amount"></span>
+
+		</br>
+
+		<div id="custom_settings_div">
+			<button id="custom_settings">Custom settings</button>
+
+			<div id="settings">
+				Row: <input type="field" id="row" value="1">
+				</br>
+				Col: <input type="field" id="col" value="1">
+				</br>
+				Mines: <input type="field" id="mines_field" value="1">
+				
+				<p></p>
+
+				<button id="print_board_btn">Print board</button>
+
+			</div>
+		</div>
+
+		<button id="easy">Easy</button>
+		<button id="middle">Middle</button>
+		<button id="hard">Hard</button>
+
+		<button id="reset">Reset game</button>
+
+		
+		<p></p>
+	
+
+	</body>
+</html>
