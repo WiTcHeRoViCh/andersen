@@ -24,6 +24,7 @@
 				var reset = document.getElementById("reset");
 
 				var all_mines_cell;
+				var save_all_mines_cell;
 				var all_empty_cell;
 				var all_mines_amount = document.getElementById("all_mines_amount");
 
@@ -96,6 +97,7 @@
 					all_mines_cell = [].slice.call(els).filter(function(el){
 						return el.className.includes("mine");
 					});
+					save_all_mines_cell = all_mines_cell;
 
 					all_empty_cell = [].slice.call(els).filter(function(el){
 						return !el.className.includes("mine");
@@ -223,10 +225,18 @@
 				//check if you click on mine
 				function checkOnMine(elem){
 					if (elem.className.includes("mine")){
+						elem.style.backgroundColor = "red";
+						showMines();
 						alert("\"MY LEGS... I DON'T FEEL MY LEGS...\"\n\"Because you do not have them...\"\n Major Payne");
 						return false;
 					}
 					return true;
+				}
+
+				function showMines(){
+					for (var i = 0; i < save_all_mines_cell.length;i++){
+						save_all_mines_cell[i].innerHTML +=" *";
+					}
 				}
 
 				function setMines(count){
@@ -238,7 +248,6 @@
 							do {
 								if (!squares[j].className.includes("mine")){
 									squares[j].className += " mine";
-									//squares[j].innerHTML +="1";
 								}
 								else{
 									j = Math.floor(Math.random() * squares.length);
@@ -256,7 +265,8 @@
 							all_mines_cell.splice(all_mines_cell.indexOf(elem), 1);
 							
 							if (all_mines_cell.length == 0) {
-								congratulations()
+								congratulations();
+								return
 							}
 
 							all_mines_amount.innerHTML -=1;
@@ -268,11 +278,13 @@
 							all_mines_amount.innerHTML = +all_mines_amount.innerHTML + 1;
 						}
 					}
+					return false;
 				}
 
 				function checkIfEmptyCellExist(){
 					if (all_empty_cell.length == 0){
 						congratulations();
+						return
 					}
 				}
 
