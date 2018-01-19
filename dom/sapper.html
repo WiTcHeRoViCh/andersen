@@ -292,7 +292,7 @@
 					switch(difficulty){
 						case "easy":   alert("It was so easy that the child would cope with this)\nTime to grow up"); middle.onclick(); break;
 						case "middle": alert("Nice work, guy!\nBut not perfect"); hard.onclick(); break;
-						case "hard":   alert("You won! You are a real man!\nNow try really hard game)"); print_board_btn.onclick(true, 50, 50, 1000); break;
+						case "hard":   alert("You won! You are a real man!\nNow try really hard game)"); print_board_btn.onclick(true, 50, 50, 800); break;
 						case "custom": 
 							if (document.getElementById("row").value > 40 && document.getElementById("col").value > 40){
 								alert("It was very hard work, but you did it. I'm very proud of you");
@@ -346,9 +346,9 @@
 			<button id="custom_settings">Custom settings</button>
 
 			<div id="settings">
-				Row: <input type="field" id="row" value="1">
+				Col: <input type="field" id="row" value="1">
 				</br>
-				Col: <input type="field" id="col" value="1">
+				Row: <input type="field" id="col" value="1">
 				</br>
 				Mines: <input type="field" id="mines_field" value="1">
 				
