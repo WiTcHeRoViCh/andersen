@@ -1,25 +1,16 @@
-function getDateFromConsistently(){
+var urls = ["http://www.json-generator.com/api/json/get/cevhxOsZnS", "http://www.json-generator.com/api/json/get/cguaPsRxAi", "http://www.json-generator.com/api/json/get/cfDZdmxnDm", "http://www.json-generator.com/api/json/get/cfkrfOjrfS", "http://www.json-generator.com/api/json/get/ceQMMKpidK"];
+
+function getDateFromConsistently(urls){
   var date = [];
-  requestTo("http://www.json-generator.com/api/json/get/cevhxOsZnS").then((result) => {
-    date.push(JSON.parse(result));
-    return requestTo("http://www.json-generator.com/api/json/get/cguaPsRxAi");
-  })
-  .then((result) => {
-    date.push(JSON.parse(result));
-    return requestTo("http://www.json-generator.com/api/json/get/cfDZdmxnDm");
-  })
-  .then((result) => {
-    date.push(JSON.parse(result));
-    return requestTo("http://www.json-generator.com/api/json/get/cfkrfOjrfS");
-  })
-  .then((result) => {
-    date.push(JSON.parse(result));
-    return requestTo("http://www.json-generator.com/api/json/get/ceQMMKpidK");
-  })
-  .then((result) => {
-    date.push(JSON.parse(result));
-    console.log(date);
-  })
+
+  for (var i = 0; i < urls.length; i++){
+    date.push(requestTo(urls[i])
+      .then((result) => {
+        return result;
+      })
+    )
+  }
+  return console.log(date);
 }
 
 function getDateFromParallel(){
@@ -31,23 +22,11 @@ function getDateFromParallel(){
 
 function requestTo(url){
   "use strict";
-  return new Promise( (resolve, reject) => {
-    var xhr = new XMLHttpRequest()
-    xhr.open('GET', url, true);
-
-    xhr.onload = function() {
-      if (this.status == 200) {
-        resolve(this.response)
-      }
-      else {
-        reject(new Error("Error"))
-      };
-    }
-
-    xhr.onerror = function (){
-      reject("Error");
-    }
-
-    xhr.send();
-  })
+  return fetch(url)
+    .then((response) => {
+      return response.json()
+    })
+    .catch((error) => {
+      return new Error(error);
+    });
 }

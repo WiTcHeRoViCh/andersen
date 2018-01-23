@@ -1,75 +1,41 @@
 function MyPromiseF(func){
-  var status = "pending";
-  var result = null;
-  var error_message = null;
-  var checkIfFinish = false;
-  this.func = func;
+  this._status = "pending";
+  this._result = null;
+  this._error_message = null;
+  this._checkIfFinish = false;
+  this._func = func;
 
-  var onFulField = [];
-  var onError = [];
+  this._onFulField = [];
+  this._onError = [];
 
-  var resolve = function(f_result, i){
-    var i = i || 0;
-    status = "fulfilled";
-    result = f_result;
+  var that = this;
 
-    for (var j = i; j < onFulField.length;j++){
-      func = onFulField[j];
-      if (checkIfFinish) break;
-      try {
-        if (i >= onFulField.length) {
-          checkIfFinish = true;
-          break;
-        }
-        if (func){
-          result = func(result);
-        }
-        i++;
-      }
-      catch(e){
-        i++;
-        reject(e, i);
-      }
-    }
+  that._resolve = function(f_result){
+    that._status = "fulfilled";
+    that._result = f_result;
+
+    that._onFulField.forEach(function(fn){
+      that._result = fn(that._result);
+    })
 
   };
-  var reject = function(f_error_message, i){
-    var i = i || 0;
-    status = "rejected";
-    error_message = f_error_message;
+  that._reject = function(f_error_message){
+    that._status = "rejected";
+    that._error_message = f_error_message;
 
-    for (var j = i; j < onError.length; j++){
-      func = onError[j];
-      if (checkIfFinish) break;
-      try{
-        if (i >= onError.length) {
-          checkIfFinish = true;
-          break;
-        }
-        if (func) {
-          error_message = func(error_message);
-          i++;
-          resolve(error_message, i);
-        }
-        i++;
-      }
-      catch(e){
-        i++;
-        reject(e, i);
-      }
-    }
+    that._onError.forEach(function(fn_e){
+      that._error_message = fn_e(that._error_message);
+    })
   }
 
-
-
-  this.func.then = function(success, error){
-    success ? onFulField.push(success) : onFulField.push(null);
-    error ? onError.push(error) : onError.push(null);
-    return func;
+  that.then = function(success, error){
+    success ? that._onFulField.push(success) : null;
+    error ? that._onError.push(error) : null;
+    return that;
   }
 
- this.func(resolve, reject);
- return this.func;
+ that._func(that._resolve, that._reject);
+ return that
 }
 
 new MyPromiseF((res, rej) => setTimeout(() => res("data"), 5000))
@@ -81,10 +47,47 @@ new MyPromiseF((res, rej) => setTimeout(() => res("data"), 5000))
 
 
 function MyPromiseP(func) {
-  return MyPromiseP.prototype(func);
+  this._status = "pending";
+  this._result = null;
+  this._error_message = null;
+  this._checkIfFinish = false;
+  this._func = func;
+
+  this._onFulField = [];
+  this._onError = [];
+
+  this._func(this.resolve(this), this.reject(this))
+  return this;
 }
 
-MyPromiseP.prototype = MyPromiseF;
+MyPromiseP.prototype.then = function(success, error){
+  success ? this._onFulField.push(success) : null;
+  error ? this._onError.push(error) : null;
+  return this;
+};
+
+MyPromiseP.prototype.resolve = function (that){
+  return function(f_result){
+    that._status = "fulfilled";
+    that._result = f_result;
+
+    that._onFulField.forEach(function(fn){
+      that._result = fn(that._result);
+    })
+  }
+}
+
+MyPromiseP.prototype.reject = function (that){
+  return function (f_error_message){
+    that._status = "fulfilled";
+    that._error_message = f_error_message;
+
+    that._onError.forEach(function(fn){
+      that._error_message = fn(that._error_message);
+    })
+  }
+}
+
 
 new MyPromiseP((res, rej) => setTimeout(() => res("data"), 5000))
   .then((res) => {alert("res "+res)}, (rej) => {alert("rej "+rej);throw new Error()})
