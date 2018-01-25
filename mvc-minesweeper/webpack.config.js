@@ -1,10 +1,16 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const PATHS ={
+  assets: path.join(__dirname, 'assets'),
+  build: path.join(__dirname, 'build')
+}
+
 module.exports = {
-  entry: "./view/displayBoard",
+  entry: PATHS.assets+'/js/displayBoard.js',
   output: {
-    filename: 'build.js'
+    path: PATHS.build,
+    filename: '[name].js'
   },
   plugins: [
     new HtmlWebpackPlugin({
