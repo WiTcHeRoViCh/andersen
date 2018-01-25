@@ -1,0 +1,26 @@
+div {
+
+}
+
+#custom_settings_div{
+  display: inline-block;
+}
+
+#reset{
+  margin-left: 20px;
+}
+
+#settings {
+  position: absolute;
+}
+
+#print_board_btn{
+  margin: 0px 25px 0 10px;
+}
+
+.square{
+  height: 28px;
+  width: 24px;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
