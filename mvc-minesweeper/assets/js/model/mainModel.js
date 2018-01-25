@@ -1,19 +1,22 @@
 "use strict";
 
 function Model (row, col, difficulty, mines){
-  row ? this.constructor.row = row : null;
-  col ? this.constructor.col = col : null;
+  this.row = row || 1;
+  this.col = col || 1;
+  this.difficulty = difficulty || "custom";
+  this.mines = mines || 1;
 
-  difficulty ? this.constructor.difficulty = difficulty : null;
-
+  this.allCells = [];
 }
 
 Model.prototype.inf = function(){
-  return [Model.row, Model.col];
+  return [this.row, this.col];
 }
 
-Model.prototype.cells = function (board_params){
-  var [row, col, mines] = board_params;
+Model.prototype.cells = function (){
+  var row = this.row;
+  var col = this.col;
+  var mines = this.mines;
 
   var board_cells = Array(row*col + 1).join("0").split("");
   var board_elements = [];
@@ -44,7 +47,7 @@ Model.prototype.cells = function (board_params){
       td.className = "square";
       td.style.backgroundColor = "#d8d8d8";
 
-      td.dataset.rowCol = [i, j];
+      td.dataset.rowCol = i + "" + j;
 
       tr.appendChild(td);
 
@@ -61,9 +64,17 @@ Model.prototype.cells = function (board_params){
     td.className += " mine"
   }
 
-  this.constructor.allCells = board_elements;
+  this.allCells = board_elements;
+  return this.allCells;
 }
 
+Model.prototype.setDifficult = function(difficul, row, col, mines){
+  this.difficulty = difficul || "custom";
+  row ? this.row = row : null;
+  col ? this.col = col : null;
+  mines ? this.mines = mines : null;
 
+  console.log("Difficul set to "+this.difficulty);
+}
 
 export default Model;

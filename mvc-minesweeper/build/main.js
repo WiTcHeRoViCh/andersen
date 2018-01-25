@@ -74,19 +74,22 @@
 
 
 function Model (row, col, difficulty, mines){
-  row ? this.constructor.row = row : null;
-  col ? this.constructor.col = col : null;
+  this.row = row || 1;
+  this.col = col || 1;
+  this.difficulty = difficulty || "custom";
+  this.mines = mines || 1;
 
-  difficulty ? this.constructor.difficulty = difficulty : null;
-
+  this.allCells = [];
 }
 
 Model.prototype.inf = function(){
-  return [Model.row, Model.col];
+  return [this.row, this.col];
 }
 
-Model.prototype.cells = function (board_params){
-  var [row, col, mines] = board_params;
+Model.prototype.cells = function (){
+  var row = this.row;
+  var col = this.col;
+  var mines = this.mines;
 
   var board_cells = Array(row*col + 1).join("0").split("");
   var board_elements = [];
@@ -117,7 +120,7 @@ Model.prototype.cells = function (board_params){
       td.className = "square";
       td.style.backgroundColor = "#d8d8d8";
 
-      td.dataset.rowCol = [i, j];
+      td.dataset.rowCol = i + "" + j;
 
       tr.appendChild(td);
 
@@ -134,10 +137,18 @@ Model.prototype.cells = function (board_params){
     td.className += " mine"
   }
 
-  this.constructor.allCells = board_elements;
+  this.allCells = board_elements;
+  return this.allCells;
 }
 
+Model.prototype.setDifficult = function(difficul, row, col, mines){
+  this.difficulty = difficul || "custom";
+  row ? this.row = row : null;
+  col ? this.col = col : null;
+  mines ? this.mines = mines : null;
 
+  console.log("Difficul set to "+this.difficulty);
+}
 
 /* harmony default export */ __webpack_exports__["a"] = (Model);
 
@@ -151,22 +162,15 @@ Model.prototype.cells = function (board_params){
 
 
 
-/* harmony default export */ __webpack_exports__["a"] = (function (){
-  var row = __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].row || 0;
-  var col = __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].col || 0;
+function DisplayBoard (){
 
-  var table = document.createElement("table");
-  var tbody = document.createElement("tbody");
+}
 
-  tbody.className = "gameBoard";
-  table.appendChild(tbody);
+DisplayBoard.prototype.addTo = function(elem, setTo){
+  document.body.insertBefore(elem, setTo);
+}
 
-  __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].allCells.forEach(function(elem){
-    tbody.appendChild(elem);
-  })
-
-  document.body.insertBefore(table, document.body.childNodes[0]);
-});
+/* harmony default export */ __webpack_exports__["a"] = (DisplayBoard);
 
 
 /***/ }),
@@ -179,7 +183,12 @@ Model.prototype.cells = function (board_params){
 
 
 
-function mainController(){
+function MainController(){
+  this.model = new __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */]();
+  this.difficulty;
+  this.board = new __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */]();
+  var that = this;
+
   var print_board_btn = document.getElementById("print_board_btn");
   var easy = document.getElementById("easy");
   var middle = document.getElementById("middle");
@@ -201,27 +210,15 @@ function mainController(){
     }
   }
 
-  print_board_btn.onclick = function(event, row, col, difficulty, mines){
-    var row = row || document.getElementById("row").value;
-    var col = col || document.getElementById("col").value;
-    var difficulty = difficulty || "custom";
-    var mines = mines || document.getElementById("mines_field").value;
+  print_board_btn.onclick = function(){
+    var row = document.getElementById("row").value || 1;
+    var col = document.getElementById("col").value || 1;
+    var difficulty = "custom";
+    var mines = document.getElementById("mines_field").value || 1;
 
-    if (__WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].difficulty != difficulty){
-      document.querySelectorAll("table").forEach(function(table){
-        table.remove();
-      })
-    }
-
-    if (!( __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].row == row && __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].col == col && __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].mines == mines && __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].difficulty == difficulty)){
-      new __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */]().cells([row, col, mines]);
-    }
-
-    new __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */](row, col, difficulty, mines);
-
-    showDifficultyMessage();
-
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */])();
+    that.difficult(difficulty, row, col, mines);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   easy.onclick = function() {
@@ -230,7 +227,9 @@ function mainController(){
     const MINES = 20;
     const DIFFICULTY = "easy";
 
-    print_board_btn.onclick(null, ROW, COL, DIFFICULTY, MINES);
+    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   middle.onclick = function() {
@@ -239,7 +238,9 @@ function mainController(){
     const MINES = 60;
     const DIFFICULTY = "middle";
 
-    print_board_btn.onclick(null, ROW, COL, DIFFICULTY, MINES);
+    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   hard.onclick = function() {
@@ -248,28 +249,57 @@ function mainController(){
     const MINES = 600;
     const DIFFICULTY = "hard";
 
-    print_board_btn.onclick(null, ROW, COL, DIFFICULTY, MINES);
+    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   reset.onclick = function(){
-    __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].allCells[0].cells[0].onclick(__WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].allCells[0].cells[0]);
+
   }
 }
 
 
-function showDifficultyMessage(){
+MainController.prototype.showDifficultyMessage = function(){
   var difficulty_message = document.getElementById("difficulty_message");
 
-  difficulty_message.innerHTML = "";
-
-  difficulty_message.innerHTML = "Global difficulty: " + __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */].difficulty;
+  difficulty_message.innerHTML = "Global difficulty: " + this.model.difficulty;
 
   setTimeout(function(){
     difficulty_message.innerHTML = "";
   }, 3500)
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (mainController);
+MainController.prototype.printBoard = function(){
+  var cells = this.model.cells();
+
+  var row = this.model.row || 1;
+  var col = this.model.col || 1;
+
+  var table = document.getElementById("board_table");
+  table.innerHTML = "";
+
+  var tbody = document.createElement("tbody");
+
+  tbody.className = "gameBoard";
+  table.appendChild(tbody);
+
+  cells.forEach(function(elem){
+    tbody.appendChild(elem);
+  })
+
+  this.board.addTo(table, table);
+}
+
+MainController.prototype.difficult = function(difficult, row, col, mines){
+  this.model.setDifficult(difficult, row, col, mines);
+}
+
+MainController.prototype.reset = function(){
+
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (MainController);
 
 
 /***/ }),
@@ -292,9 +322,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__controller_mainController__["a" /* default */])(); //must by first
 
+function Game(){
+  this.mainController;
+}
 
+Game.prototype.start = function(){
+  this.mainController = new __WEBPACK_IMPORTED_MODULE_3__controller_mainController__["a" /* default */](); //must by first
+}
+
+Game.prototype.setDifficultTo = function(difficult, row, col, mines){
+  this.mainController.difficult(difficult, arg);
+}
+
+Game.prototype.printBoard = function(){
+  this.mainController.printBoard();
+}
+
+var game = new Game();
+
+game.start();
+
+/*
+game.setDifficultTo("easy");
+game.setDifficultTo("custom", 3, 3, 3)
+game.printBoard();
+*/
 
 /***/ }),
 /* 5 */,
@@ -886,7 +939,7 @@ exports = module.exports = __webpack_require__(6)(false);
 
 
 // module
-exports.push([module.i, "#custom_settings_div {\n  display: inline-block; }\n\n#reset {\n  margin-left: 20px; }\n\n#settings {\n  position: absolute; }\n\n#print_board_btn {\n  margin: 0px 25px 0 10px; }\n\n.square {\n  height: 28px;\n  width: 24px;\n  border: 1px solid gray;\n  border-radius: 5px; }\n", ""]);
+exports.push([module.i, "#custom_settings_div {\n  display: inline-block; }\n\n#reset {\n  margin-left: 20px; }\n\n#settings {\n  position: absolute; }\n\n#print_board_btn {\n  margin: 0px 25px 0 10px; }\n\n.square {\n  height: 28px;\n  width: 24px;\n  border: 1px solid gray;\n  border-radius: 5px; }\n\n.table_inline {\n  display: inline-block;\n  margin-right: 15px; }\n", ""]);
 
 // exports
 

@@ -1,7 +1,12 @@
 import mainModel from "../model/mainModel";
-import displayBoard from "../view/displayBoard";
+import DisplayBoard from "../view/displayBoard";
 
-function mainController(){
+function MainController(){
+  this.model = new mainModel();
+  this.difficulty;
+  this.board = new DisplayBoard();
+  var that = this;
+
   var print_board_btn = document.getElementById("print_board_btn");
   var easy = document.getElementById("easy");
   var middle = document.getElementById("middle");
@@ -23,27 +28,15 @@ function mainController(){
     }
   }
 
-  print_board_btn.onclick = function(event, row, col, difficulty, mines){
-    var row = row || document.getElementById("row").value;
-    var col = col || document.getElementById("col").value;
-    var difficulty = difficulty || "custom";
-    var mines = mines || document.getElementById("mines_field").value;
+  print_board_btn.onclick = function(){
+    var row = document.getElementById("row").value || 1;
+    var col = document.getElementById("col").value || 1;
+    var difficulty = "custom";
+    var mines = document.getElementById("mines_field").value || 1;
 
-    if (mainModel.difficulty != difficulty){
-      document.querySelectorAll("table").forEach(function(table){
-        table.remove();
-      })
-    }
-
-    if (!( mainModel.row == row && mainModel.col == col && mainModel.mines == mines && mainModel.difficulty == difficulty)){
-      new mainModel().cells([row, col, mines]);
-    }
-
-    new mainModel(row, col, difficulty, mines);
-
-    showDifficultyMessage();
-
-    displayBoard();
+    that.difficult(difficulty, row, col, mines);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   easy.onclick = function() {
@@ -52,7 +45,9 @@ function mainController(){
     const MINES = 20;
     const DIFFICULTY = "easy";
 
-    print_board_btn.onclick(null, ROW, COL, DIFFICULTY, MINES);
+    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   middle.onclick = function() {
@@ -61,7 +56,9 @@ function mainController(){
     const MINES = 60;
     const DIFFICULTY = "middle";
 
-    print_board_btn.onclick(null, ROW, COL, DIFFICULTY, MINES);
+    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   hard.onclick = function() {
@@ -70,25 +67,54 @@ function mainController(){
     const MINES = 600;
     const DIFFICULTY = "hard";
 
-    print_board_btn.onclick(null, ROW, COL, DIFFICULTY, MINES);
+    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.showDifficultyMessage();
+    that.printBoard();
   };
 
   reset.onclick = function(){
-    mainModel.allCells[0].cells[0].onclick(mainModel.allCells[0].cells[0]);
+
   }
 }
 
 
-function showDifficultyMessage(){
+MainController.prototype.showDifficultyMessage = function(){
   var difficulty_message = document.getElementById("difficulty_message");
 
-  difficulty_message.innerHTML = "";
-
-  difficulty_message.innerHTML = "Global difficulty: " + mainModel.difficulty;
+  difficulty_message.innerHTML = "Global difficulty: " + this.model.difficulty;
 
   setTimeout(function(){
     difficulty_message.innerHTML = "";
   }, 3500)
 }
 
-export default mainController;
+MainController.prototype.printBoard = function(){
+  var cells = this.model.cells();
+
+  var row = this.model.row || 1;
+  var col = this.model.col || 1;
+
+  var table = document.getElementById("board_table");
+  table.innerHTML = "";
+
+  var tbody = document.createElement("tbody");
+
+  tbody.className = "gameBoard";
+  table.appendChild(tbody);
+
+  cells.forEach(function(elem){
+    tbody.appendChild(elem);
+  })
+
+  this.board.addTo(table, table);
+}
+
+MainController.prototype.difficult = function(difficult, row, col, mines){
+  this.model.setDifficult(difficult, row, col, mines);
+}
+
+MainController.prototype.reset = function(){
+
+}
+
+export default MainController;
