@@ -71,45 +71,58 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__controller_mainController__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__ = __webpack_require__(1);
+
+
+
 
 
 function Model (row, col, difficulty, mines){
-  this.row = row || 1;
-  this.col = col || 1;
+  this.row = row || 2;
+  this.col = col || 2;
   this.difficulty = difficulty || "custom";
-  this.mines = mines || 1;
+  this.mines = mines || 2;
+
+  this.constructor.displayMines = 2;
+
+  this.mainController = __WEBPACK_IMPORTED_MODULE_0__controller_mainController__["a" /* default */];
+  this.displayBoard = __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */];
+
+  this.easy = [10, 10, 20];
+  this.middle = [20,20,60];
+  this.hard = [40,40,500];
 
   this.allCells = [];
+  this.constructor.all_empty_cell = [];
+  this.constructor.all_mines_cell = [];
 }
 
-Model.prototype.inf = function(){
-  return [this.row, this.col];
-}
 
-Model.prototype.cells = function (){
+Model.prototype.createCells = function (){
   var row = this.row;
   var col = this.col;
   var mines = this.mines;
+
+  this.constructor.displayMines = mines;
+
+  this.constructor.all_empty_cell = [];
+  this.constructor.all_mines_cell = [];
 
   var board_cells = Array(row*col + 1).join("0").split("");
   var board_elements = [];
   var k = 0;
 
-  row*col <= mines ? mines = row*col-1 : null;
-
-  for (let i = 0; i < mines; i++){
+  for (let i = 0; i <mines; i++){
     var j = Math.floor(Math.random() * board_cells.length);
 
-    do {
-
-      if (board_cells[j] != "1"){
-        board_cells[j] = "1";
-      }
-      else{
-        j = Math.floor(Math.random() * board_cells.length);
-      }
-
-    }while (board_cells[j] == "1")
+    if (board_cells[j] == "1"){
+      i--;
+      j = Math.floor(Math.random() * board_cells.length);
+    }
+    else {
+      board_cells[j] = "1";
+    }
   }
 
   for (var i = 0; i < col; i++){
@@ -120,13 +133,20 @@ Model.prototype.cells = function (){
       td.className = "square";
       td.style.backgroundColor = "#d8d8d8";
 
-      td.dataset.rowCol = i + "" + j;
+      td.dataset.rowCol = [i,j];
+      td.oncontextmenu = this.setFlag;
 
       tr.appendChild(td);
 
       if (board_cells[k] == "1"){
+        this.constructor.all_mines_cell.push(td);
+
         td.className += " mine"
       }
+      else{
+        this.constructor.all_empty_cell.push(td);
+      }
+
       k++;
     }
 
@@ -143,14 +163,164 @@ Model.prototype.cells = function (){
 
 Model.prototype.setDifficult = function(difficul, row, col, mines){
   this.difficulty = difficul || "custom";
-  row ? this.row = row : null;
-  col ? this.col = col : null;
-  mines ? this.mines = mines : null;
+
+  if (this.difficulty == "easy"){
+    [this.row, this.col, this.mines] = this.easy;
+  }
+  else if (this.difficulty == "middle"){
+    [this.row, this.col, this.mines] = this.middle;
+  }
+  else if (this.difficulty == "hard"){
+    [this.row, this.col, this.mines] = this.hard;
+  }
+  else{
+    this.row = row || 2;
+    this.col = col || 2;
+    this.mines = mines || 2;
+
+    (this.row * this.col <= this.mines) ? this.mines = (this.row * this.col)-1 : null;
+  }
 
   console.log("Difficul set to "+this.difficulty);
 }
 
+Model.prototype.step = function(cell){
+  var nearest = this.findNearest(cell);
+  var nearest_mines;
+  var nearest_empty = [];
+
+  nearest_mines = this.nearMines(nearest);
+
+  if (this.isMine(cell) || this.isClean(cell)) return
+
+  if (nearest_mines.length > 0){
+    cell.innerHTML = nearest_mines.length;
+  }
+
+  cell.style.backgroundColor = "white";
+  cell.className = "square clean";
+  this.constructor.all_empty_cell.splice(this.constructor.all_empty_cell.indexOf(cell), 1);
+
+  this.checkIfEmptyCellExist();
+
+  for (var j = 0; j < nearest.length; j++){
+    var near_cell = nearest[j];
+    var was_mine = false;
+
+    for (var i = 0; i < nearest.length; i++){
+      if (this.isMine(nearest[i])) was_mine = true;
+
+      if (!this.isMine(nearest[i]) && !this.isClean(cell)){
+        nearest[i].style.backgroundColor = "white";
+        nearest[i].className = "square clean";
+        this.constructor.all_empty_cell.splice(this.constructor.all_empty_cell.indexOf(nearest[i]), 1);
+
+        this.checkIfEmptyCellExist();
+      }
+    }
+
+    if (!was_mine) this.step(near_cell);
+  }
+}
+
+Model.prototype.findNearest = function(cell){
+  var near = [];
+  var [row_i, col_i] = cell.getAttribute("data-row-col").split(",");
+
+  for (var i = -1; i < 2; i++){
+    var tr = this.allCells[+row_i + i];
+
+    if (tr){
+
+      for (var j = -1; j < 2;j++){
+        var td = tr.cells[+col_i + j];
+
+        if (td && td != cell){
+          near.push(td);
+        }
+      }
+
+    }
+  }
+
+  return near;
+}
+
+Model.prototype.nearMines = function(cells){
+  var result = [];
+
+  [].forEach.call(cells, function(el){
+    if (el.className.includes("mine")){
+      result.push(el);
+    }
+  });
+
+  return result;
+}
+
+Model.prototype.isMine = function(cell){
+  if (cell.className.includes("mine")){
+    return true;
+  }
+  return false;
+}
+
+Model.prototype.isClean = function(cell){
+  return cell.className.includes("clean") ? true : false;
+}
+
+Model.prototype.checkIfEmptyCellExist = function(){
+  if (this.constructor.all_empty_cell.length == 0){
+    var reset = document.getElementById("reset");
+
+    __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */].endGameMessage("You won! My congratulations!");
+
+    reset.onclick();
+  }
+}
+
+Model.prototype.setFlag = function(cell){
+
+  if (cell.target){
+    cell = cell.target;
+  }
+  else{
+    var [row_i, col_i] = cell.getAttribute("data-row-col").split(",");
+
+    cell = this.allCells[row_i].cells[col_i];
+  }
+
+  if (!Model.prototype.isClean(cell)){
+
+    if (cell.style.backgroundColor == "rgb(216, 216, 216)") {
+      cell.style.backgroundColor = "red";
+
+      (Model.all_mines_cell.indexOf(cell) != -1) ? Model.all_mines_cell.splice( Model.all_mines_cell.indexOf(cell),1 ) : null ;
+
+      Model.displayMines--;
+      __WEBPACK_IMPORTED_MODULE_0__controller_mainController__["a" /* default */].prototype.displayMinesCount(Model.displayMines)
+
+      if (Model.all_mines_cell.length <= 0 && Model.displayMines >= 0){
+        var reset = document.getElementById("reset");
+
+        __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */].endGameMessage("You won! My congratulations!");
+
+        reset.onclick();
+      }
+    }
+    else{
+      cell.style.backgroundColor = "rgb(216, 216, 216)";
+      Model.displayMines++;
+
+      __WEBPACK_IMPORTED_MODULE_0__controller_mainController__["a" /* default */].prototype.displayMinesCount(Model.displayMines);
+    }
+  }
+
+  return false;
+}
+
 /* harmony default export */ __webpack_exports__["a"] = (Model);
+
 
 
 /***/ }),
@@ -158,8 +328,6 @@ Model.prototype.setDifficult = function(difficul, row, col, mines){
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_mainModel__ = __webpack_require__(0);
-
 
 
 function DisplayBoard (){
@@ -167,10 +335,27 @@ function DisplayBoard (){
 }
 
 DisplayBoard.prototype.addTo = function(elem, setTo){
-  document.body.insertBefore(elem, setTo);
+  setTo.appendChild(elem);
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (DisplayBoard);
+DisplayBoard.prototype.minesCount = function(mines){
+  var span = document.getElementById("mines_count");
+  span.innerHTML = "All mines: " + mines;
+}
+
+DisplayBoard.prototype.endGameMessage = function(message){
+  alert(message);
+}
+
+DisplayBoard.prototype.displayMines = function(){
+  var mines = document.getElementsByClassName("mine");
+
+  [].forEach.call(mines, function(mine_elem){
+    mine_elem.innerHTML = "*";
+  });
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (new DisplayBoard());
 
 
 /***/ }),
@@ -186,7 +371,8 @@ DisplayBoard.prototype.addTo = function(elem, setTo){
 function MainController(){
   this.model = new __WEBPACK_IMPORTED_MODULE_0__model_mainModel__["a" /* default */]();
   this.difficulty;
-  this.board = new __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */]();
+  this.board = __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */];
+  this.minesCount = 0;
   var that = this;
 
   var print_board_btn = document.getElementById("print_board_btn");
@@ -198,6 +384,8 @@ function MainController(){
 
   var settings = document.getElementById("settings");
   var custom_settings = document.getElementById("custom_settings");
+
+  var board_table = document.getElementById("board_table");
 
   settings.style.display = "none";
 
@@ -211,10 +399,12 @@ function MainController(){
   }
 
   print_board_btn.onclick = function(){
-    var row = document.getElementById("row").value || 1;
-    var col = document.getElementById("col").value || 1;
+    var row = +document.getElementById("row").value || 2;
+    var col = +document.getElementById("col").value || 2;
+    var mines = +document.getElementById("mines_field").value || 2;
     var difficulty = "custom";
-    var mines = document.getElementById("mines_field").value || 1;
+
+    settings.style.display = "none";
 
     that.difficult(difficulty, row, col, mines);
     that.showDifficultyMessage();
@@ -222,40 +412,47 @@ function MainController(){
   };
 
   easy.onclick = function() {
-    const ROW = 10;
-    const COL = 10;
-    const MINES = 20;
+    settings.style.display = "none";
+
     const DIFFICULTY = "easy";
 
-    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.difficult(DIFFICULTY);
     that.showDifficultyMessage();
     that.printBoard();
   };
 
   middle.onclick = function() {
-    const ROW = 20;
-    const COL = 20;
-    const MINES = 60;
+    settings.style.display = "none";
+
     const DIFFICULTY = "middle";
 
-    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.difficult(DIFFICULTY);
     that.showDifficultyMessage();
     that.printBoard();
   };
 
   hard.onclick = function() {
-    const ROW = 40;
-    const COL = 40;
-    const MINES = 600;
+    settings.style.display = "none";
+
     const DIFFICULTY = "hard";
 
-    that.difficult(DIFFICULTY, ROW, COL, MINES);
+    that.difficult(DIFFICULTY);
     that.showDifficultyMessage();
     that.printBoard();
   };
 
   reset.onclick = function(){
+    that.reset();
+  }
 
+  board_table.onclick = function(e){
+    var elem = e.target;
+
+    if (elem.className.includes("square")){
+      var [row_i, col_i] = elem.getAttribute("data-row-col").split(",");
+
+      that.clickCell(row_i, col_i);
+    }
   }
 }
 
@@ -271,7 +468,10 @@ MainController.prototype.showDifficultyMessage = function(){
 }
 
 MainController.prototype.printBoard = function(){
-  var cells = this.model.cells();
+
+  var cells = this.model.createCells();
+
+  this.minesCount = this.model.mines;
 
   var row = this.model.row || 1;
   var col = this.model.col || 1;
@@ -281,14 +481,16 @@ MainController.prototype.printBoard = function(){
 
   var tbody = document.createElement("tbody");
 
-  tbody.className = "gameBoard";
+  tbody.id = "gameBoard";
   table.appendChild(tbody);
 
   cells.forEach(function(elem){
     tbody.appendChild(elem);
   })
 
-  this.board.addTo(table, table);
+  this.board.addTo(tbody, table);
+
+  this.displayMinesCount(this.model.mines);
 }
 
 MainController.prototype.difficult = function(difficult, row, col, mines){
@@ -296,7 +498,33 @@ MainController.prototype.difficult = function(difficult, row, col, mines){
 }
 
 MainController.prototype.reset = function(){
+  this.printBoard();
+}
 
+MainController.prototype.clickCell = function(row_i, col_i){
+  var cell = this.model.allCells[row_i].cells[col_i];
+
+  if (this.model.isMine(cell)){
+    cell.style.backgroundColor = "red";
+
+    this.endGame("You lose! Try again!");
+  }
+  else{
+    this.model.step(cell);
+  }
+}
+
+MainController.prototype.displayMinesCount = function(mines){
+  mines = mines || 0;
+
+  __WEBPACK_IMPORTED_MODULE_1__view_displayBoard__["a" /* default */].minesCount(mines)
+}
+
+MainController.prototype.endGame = function(message){
+  this.board.displayMines();
+
+  this.board.endGameMessage(message);
+  this.reset();
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (MainController);
@@ -328,26 +556,41 @@ function Game(){
 }
 
 Game.prototype.start = function(){
-  this.mainController = new __WEBPACK_IMPORTED_MODULE_3__controller_mainController__["a" /* default */](); //must by first
+  this.mainController = new __WEBPACK_IMPORTED_MODULE_3__controller_mainController__["a" /* default */]();
 }
 
 Game.prototype.setDifficultTo = function(difficult, row, col, mines){
-  this.mainController.difficult(difficult, arg);
+
+  this.mainController.difficult(difficult, row, col, mines);
 }
 
 Game.prototype.printBoard = function(){
   this.mainController.printBoard();
 }
 
+Game.prototype.reset = function(){
+  this.mainController.reset();
+}
+
+Game.prototype.clickCell = function(row_i, col_i){
+  this.mainController.clickCell(row_i, col_i);
+};
+
 var game = new Game();
 
-game.start();
+game.start(); //must by first
 
 /*
+game.printBoard();
+game.setDifficultTo("easy");
+game.reset();
+game.clickCell(0,0)
 game.setDifficultTo("easy");
 game.setDifficultTo("custom", 3, 3, 3)
-game.printBoard();
+game.reset();
+game.clickCell(0,0);
 */
+
 
 /***/ }),
 /* 5 */,
@@ -939,7 +1182,7 @@ exports = module.exports = __webpack_require__(6)(false);
 
 
 // module
-exports.push([module.i, "#custom_settings_div {\n  display: inline-block; }\n\n#reset {\n  margin-left: 20px; }\n\n#settings {\n  position: absolute; }\n\n#print_board_btn {\n  margin: 0px 25px 0 10px; }\n\n.square {\n  height: 28px;\n  width: 24px;\n  border: 1px solid gray;\n  border-radius: 5px; }\n\n.table_inline {\n  display: inline-block;\n  margin-right: 15px; }\n", ""]);
+exports.push([module.i, "#custom_settings_div {\n  display: inline-block; }\n\n#reset {\n  margin-left: 20px; }\n\n#settings {\n  position: absolute; }\n\n#print_board_btn {\n  margin: 0px 25px 0 10px; }\n\n.square {\n  height: 28px;\n  width: 28px;\n  border: 1px solid gray;\n  border-radius: 5px; }\n\n.table_inline {\n  display: inline-block;\n  margin-right: 15px; }\n", ""]);
 
 // exports
 

@@ -12,23 +12,37 @@ function Game(){
 }
 
 Game.prototype.start = function(){
-  this.mainController = new MainController(); //must by first
+  this.mainController = new MainController();
 }
 
 Game.prototype.setDifficultTo = function(difficult, row, col, mines){
-  this.mainController.difficult(difficult, arg);
+
+  this.mainController.difficult(difficult, row, col, mines);
 }
 
 Game.prototype.printBoard = function(){
   this.mainController.printBoard();
 }
 
+Game.prototype.reset = function(){
+  this.mainController.reset();
+}
+
+Game.prototype.clickCell = function(row_i, col_i){
+  this.mainController.clickCell(row_i, col_i);
+};
+
 var game = new Game();
 
-game.start();
+game.start(); //must by first
 
 /*
+game.printBoard();
+game.setDifficultTo("easy");
+game.reset();
+game.clickCell(0,0)
 game.setDifficultTo("easy");
 game.setDifficultTo("custom", 3, 3, 3)
-game.printBoard();
+game.reset();
+game.clickCell(0,0);
 */
