@@ -1,0 +1,195 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Canvas</title>
+
+    <script type="text/javascript">
+    window.onload = function(){
+
+      class Board{
+        constructor(width = 100, height = 100){
+          this.width = width;
+          this.height = height;
+
+          this._displayedFigures = [];
+
+          this._figures = [Square, Triangle, Circle, Rhombus];
+        }
+
+
+        printBoard(appendTo){
+          appendTo.innerHTML = "";
+
+          let board = document.createElement("div");
+          board.id = "board";
+
+          board.style.width = this.width;
+          board.style.height = this.height;
+          board.style.backgroundColor = "black";
+
+          let that = this;
+          board.onclick = function(){
+            let rand_class_i = Math.floor(Math.random() * (that._figures.length) );
+            let figure = that._figures[rand_class_i];
+
+            that._displayedFigures.push(new figure(that.width, that.height).printFigure());
+          }
+
+          board.oncontextmenu = function(){
+            if (that._displayedFigures.length > 0)
+              board.removeChild(that._displayedFigures.pop());
+          }
+
+          appendTo.appendChild(board);
+        }
+
+      }
+
+      class Shape{
+        constructor(width, height){
+          this.width = width;
+          this.height = height;
+          this._max_side_val = parseInt((width+height)/10);
+        }
+
+        printFigure(shapePrintFunc=this.getDefaulrPrintFunc){
+          let {side, rgb_color, x, y} = this.getRandomParams();
+          let canvas = document.createElement("canvas");
+          canvas.className = "canvas";
+          canvas.width = this.width;
+          canvas.height = this.height;
+
+          let board = document.getElementById("board");
+          board.appendChild(canvas);
+
+          if (canvas.getContext){
+            let context = canvas.getContext('2d');
+
+            context.beginPath()
+            context.fillStyle = `rgb(${rgb_color})`;
+            shapePrintFunc(context, x, y, side);
+            context.closePath();
+            context.fill();
+          }
+
+          return canvas;
+        }
+
+        getDefaulrPrintFunc(context, x, y, side) {
+          context.fillRect(x, y, side, side);
+        }
+
+        getRandomParams(){
+          const MAX_SIDE_VAL = this._max_side_val;
+          const MAX_X_VAL = this.width - MAX_SIDE_VAL;
+          const MAX_Y_VAL = this.height - MAX_SIDE_VAL;
+          const MAX_COLOR_VAL = 255;
+
+          let side = this.getRandomNumbers(MAX_SIDE_VAL)[0];
+          let x = this.getRandomNumbers(MAX_X_VAL)[0];
+          let y = this.getRandomNumbers(MAX_Y_VAL)[0];
+          let rgb_color = this.getRandomNumbers(MAX_COLOR_VAL, MAX_COLOR_VAL, MAX_COLOR_VAL);
+
+          return {
+            side, rgb_color, x, y
+          }
+        }
+
+        getRandomNumbers(...numbers){
+          let result = [];
+
+          for (let num of numbers){
+            result.push(Math.floor(Math.random() * num));
+          }
+
+          return result;
+        }
+      }
+
+      class Square extends Shape{
+        printFigure(){
+          return super.printFigure(this.squarePrintFunc);
+        }
+
+        squarePrintFunc(context, x, y, side) {
+          context.fillRect(x, y, side, side);
+        }
+      }
+
+      class Triangle extends Shape{
+        printFigure(){
+          return super.printFigure(this.trianglePrintFunc);
+        }
+
+        trianglePrintFunc(context, x, y, side) {
+          context.moveTo(x, y);
+          context.lineTo(x+side, y);
+          context.lineTo(x+(side/2), y+side);
+          context.lineTo(x, y);
+        }
+      }
+
+      class Circle extends Shape{
+        printFigure(){
+          return super.printFigure(this.circlePrintFunc);
+        }
+
+        circlePrintFunc(context, x, y, side) {
+          context.arc(x, y, side, Math.PI * 2, false);
+          context.strokeStyle = "#000";
+          context.stroke();
+        }
+      }
+
+      class Rhombus extends Shape{
+        printFigure(){
+          return super.printFigure(this.rhombusPrintFunc);
+        }
+
+        rhombusPrintFunc(context, x, y, side) {
+          context.moveTo(x+(side/2), y);
+          context.lineTo(x, y+side);
+          context.lineTo(x+(side/2), y+(side*2));
+          context.lineTo(x+side, y+side);
+          context.lineTo(x+(side/2), y);
+        }
+      }
+
+
+      //beginning
+      let make_btn = document.getElementById("make");
+
+      make_btn.onclick = function(){
+        let width = document.getElementById("width").value;
+        let height = document.getElementById("height").value;
+        let board_place = document.getElementById("board_place");
+
+        let board = new Board(+width, +height)
+        board.printBoard(board_place);
+      }
+
+    }
+    </script>
+
+    <style type="text/css">
+
+      .canvas {
+        position: absolute;
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div>
+      Width: <input type="text" id="width" value=0>
+      Height: <input type="text" id="height" value=0>
+      <input type="button" id="make" value="Make">
+
+      <div id ="board_place"></div>
+    </div>
+
+  </body>
+</html>
