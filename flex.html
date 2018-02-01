@@ -36,15 +36,11 @@
       justify-content: space-between;
     }
 
-    .logo-link-flex div {
-       margin-left: 55px;
+    .link-flex{
+      display: flex;
     }
 
-    .logo-link-flex div:first-child {
-      margin-right: auto;
-      font-size: 22px;
-      margin-left: 0;
-    }
+
 
     .elem-1-2 {
       display: flex;
@@ -58,60 +54,53 @@
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      width: 200px;
-      height: 110px;
-      justify-content: space-between;
-    }
+      justify-content: flex-start;
 
-    .intro-flex{
-      flex-grow: 1;
+      width: 200px;
     }
 
     .featured {
       display: flex;
-
+      justify-content: center;
       background: #9f9f9f;
       height: 200px;
-      width: 600px;
+      flex-grow: 1;
     }
 
     .featured-text{
       align-self: center;
 
-      margin-left: 125px;
       width: 150px;
     }
 
 
     /* Elem 2*/
     .main-flex-elem-2 {
-      height: 600px;
-
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 20px;
     }
 
     .elem-2 {
-      width: 88%;
-      height: 90%;
-
+      width: 85%;
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
+      justify-content: space-around;
     }
 
     .list{
       display: flex;
       flex: 1 220px;
+      justify-content: center;
+      align-items: center;
 
       height: 200px;
       background: #c3c3c3;
+      margin-bottom: 20px;
       margin-left: 10px;
       margin-right: 10px;
-
-      justify-content: center;
-      align-items: center;
     }
 
 
@@ -146,13 +135,18 @@
         <div class="elem-1-1">
 
           <div class="logo-link-flex">
-            <div>Logo</div>
+            <div class="logo-flex">
+              <div>Logo</div>
+            </div>
 
-            <div>Link1</div>
-            <div>Link2</div>
-            <div>Link3</div>
-            <div>Link4</div>
-            <div>Link5</div>
+            <div class="link-flex">
+              <div>Link1</div>
+              <div>Link2</div>
+              <div>Link3</div>
+              <div>Link4</div>
+              <div>Link5</div>
+            </div>
+
           </div>
 
         </div>
@@ -177,31 +171,31 @@
         <div class="elem-2">
 
           <div class="list">
-            <div class="list-text">Services</div>
+            Services
           </div>
 
           <div class="list">
-            <div class="list-text">Services</div>
+            Services
           </div>
 
           <div class="list">
-            <div class="list-text">Services</div>
+            Services
           </div>
 
           <div class="list">
-            <div class="list-text">Services</div>
+            Services
           </div>
 
           <div class="list">
-            <div class="list-text">Services</div>
+            Services
           </div>
 
           <div class="list">
-            <div class="list-text">Services</div>
+            Services
           </div>
 
           <div class="list">
-            <div class="list-text">Services</div>
+            Services
           </div>
 
         </div>
