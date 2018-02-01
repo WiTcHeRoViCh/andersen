@@ -13,7 +13,7 @@
 
           this._displayedFigures = [];
 
-          this._figures = [Square, Triangle, Circle, Rhombus];
+          this._figures = [Square, Rectangle, Circle, Rhombus];
         }
 
 
@@ -116,16 +116,13 @@
         }
       }
 
-      class Triangle extends Shape{
+      class Rectangle extends Shape{
         printFigure(){
-          return super.printFigure(this.trianglePrintFunc);
+          return super.printFigure(this.rectanglePrintFunc);
         }
 
-        trianglePrintFunc(context, x, y, side) {
-          context.moveTo(x, y);
-          context.lineTo(x+side, y);
-          context.lineTo(x+(side/2), y+side);
-          context.lineTo(x, y);
+        rectanglePrintFunc(context, x, y, side) {
+          context.fillRect(x, y, side*2, side);
         }
       }
 
