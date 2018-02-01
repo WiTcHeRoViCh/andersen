@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Flex</title>
+
+    <style type="text/css">
+
+    #main-flex{
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    /* Elem 1*/
+    .main-flex-elem-1 {
+      background: #c3c3c3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+
+      height: 300px;
+    }
+
+    .elem-1-1 {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      width: 92%;
+    }
+
+    .logo-link-flex {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .logo-link-flex div {
+       margin-left: 55px;
+    }
+
+    .logo-link-flex div:first-child {
+      margin-right: auto;
+      font-size: 22px;
+      margin-left: 0;
+    }
+
+    .elem-1-2 {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      width: 92%;
+    }
+
+    .intro {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      width: 200px;
+      height: 110px;
+      justify-content: space-between;
+    }
+
+    .intro-flex{
+      flex-grow: 1;
+    }
+
+    .featured {
+      display: flex;
+
+      background: #9f9f9f;
+      height: 200px;
+      width: 600px;
+    }
+
+    .featured-text{
+      align-self: center;
+
+      margin-left: 125px;
+      width: 150px;
+    }
+
+
+    /* Elem 2*/
+    .main-flex-elem-2 {
+      height: 600px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .elem-2 {
+      width: 88%;
+      height: 90%;
+
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .list{
+      display: flex;
+      flex: 1 220px;
+
+      height: 200px;
+      background: #c3c3c3;
+      margin-left: 10px;
+      margin-right: 10px;
+
+      justify-content: center;
+      align-items: center;
+    }
+
+
+    /* Elem 3*/
+    .main-flex-elem-3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      background: #c3c3c3;
+      height: 100px;
+    }
+
+    .footer{
+      flex-direction: row-reverse;
+    }
+
+    .footer div:first-child{
+      margin-right: 0;
+      margin-left: auto;
+      font-size: 17px;
+    }
+
+    </style>
+
+  </head>
+
+  <body>
+    <div id="main-flex">
+
+      <div class="main-flex-elem main-flex-elem-1">
+        <div class="elem-1-1">
+
+          <div class="logo-link-flex">
+            <div>Logo</div>
+
+            <div>Link1</div>
+            <div>Link2</div>
+            <div>Link3</div>
+            <div>Link4</div>
+            <div>Link5</div>
+          </div>
+
+        </div>
+
+        <div class="elem-1-2">
+
+          <div class = "intro">
+            <div class="intro-flex">Intro</div>
+            <div class="intro-flex">
+              Some introdaction lines about the website or company
+            </div>
+          </div>
+
+          <div class = "featured">
+            <div class="featured-text">Featured Project Slider</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-flex-elem main-flex-elem-2">
+
+        <div class="elem-2">
+
+          <div class="list">
+            <div class="list-text">Services</div>
+          </div>
+
+          <div class="list">
+            <div class="list-text">Services</div>
+          </div>
+
+          <div class="list">
+            <div class="list-text">Services</div>
+          </div>
+
+          <div class="list">
+            <div class="list-text">Services</div>
+          </div>
+
+          <div class="list">
+            <div class="list-text">Services</div>
+          </div>
+
+          <div class="list">
+            <div class="list-text">Services</div>
+          </div>
+
+          <div class="list">
+            <div class="list-text">Services</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="main-flex-elem main-flex-elem-3">
+
+        <div class="elem-1-1">
+
+          <div class="logo-link-flex footer">
+            <div>Copyright info</div>
+
+            <div>Link1</div>
+            <div>Link2</div>
+            <div>Link3</div>
+            <div>Link4</div>
+            <div>Link5</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>
