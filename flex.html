@@ -20,7 +20,6 @@
       align-items: center;
       justify-content: space-around;
 
-      height: 300px;
     }
 
     .elem-1-1 {
@@ -29,6 +28,7 @@
       justify-content: center;
 
       width: 92%;
+      margin: 30px 0;
     }
 
     .logo-link-flex {
@@ -36,8 +36,15 @@
       justify-content: space-between;
     }
 
+    .logo-flex {
+      flex-grow: 2;
+    }
+
     .link-flex{
       display: flex;
+      flex-grow: 1;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
 
@@ -48,6 +55,7 @@
       flex-wrap: wrap;
 
       width: 92%;
+      margin-bottom: 30px;
     }
 
     .intro {
@@ -64,7 +72,7 @@
       justify-content: center;
       background: #9f9f9f;
       height: 200px;
-      flex-grow: 1;
+      flex: 1 400px;
     }
 
     .featured-text{
@@ -108,7 +116,7 @@
     .main-flex-elem-3 {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
 
       background: #c3c3c3;
       height: 100px;
@@ -116,12 +124,17 @@
 
     .footer{
       flex-direction: row-reverse;
+      width: 90%;
     }
 
-    .footer div:first-child{
-      margin-right: 0;
-      margin-left: auto;
-      font-size: 17px;
+    .footer-copyright{
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .footer-link{
+      flex-wrap: wrap;
+      flex-grow: 2;
     }
 
     </style>
@@ -204,19 +217,20 @@
 
       <div class="main-flex-elem main-flex-elem-3">
 
-        <div class="elem-1-1">
-
           <div class="logo-link-flex footer">
-            <div>Copyright info</div>
+            <div class="logo-flex footer-copyright">
+              <div>Copyrigth info</div>
+            </div>
 
-            <div>Link1</div>
-            <div>Link2</div>
-            <div>Link3</div>
-            <div>Link4</div>
-            <div>Link5</div>
+            <div class="link-flex footer-link">
+              <div>Link1</div>
+              <div>Link2</div>
+              <div>Link3</div>
+              <div>Link4</div>
+              <div>Link5</div>
+            </div>
+
           </div>
-
-        </div>
 
       </div>
     </div>
