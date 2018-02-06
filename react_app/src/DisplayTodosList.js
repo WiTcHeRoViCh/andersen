@@ -10,9 +10,6 @@ class DisplayTodosList extends Component {
     this.state = {
       chipData: [],
     }
-
-    this.handleRequestDelete = this.props.handleRequestDelete.bind(this);
-    this.handleCheck = this.props.handleCheck.bind(this);
   }
 
   render (){
@@ -20,8 +17,8 @@ class DisplayTodosList extends Component {
     this.state.chipData = this.sortTodoList(this.props.todoList).map((todo, id) => {
 
       return (
-        <TodoElement key={id} todo={todo} handleRequestDelete = {this.handleRequestDelete}
-          handleCheck={this.handleCheck} id={id}/>
+        <TodoElement key={id} todo={todo} handleRequestDelete = {this.props.handleRequestDelete}
+          handleCheck={this.props.handleCheck} id={id}/>
       );
 
     });
@@ -35,6 +32,7 @@ class DisplayTodosList extends Component {
 
   sortTodoList = (todos) => {
     const filterIdx = this.props.curFilterId;
+    todos = this.props.findTodo ? todos.filter((todo) => todo.text.includes(this.props.findTodo) ) : todos;
 
     if (filterIdx === 1)
       return todos.filter( (todo)=> todo.isComplete === false);

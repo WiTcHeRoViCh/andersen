@@ -1,8 +1,14 @@
 #form {
   display: flex;
+  justify-content: space-between;
 
   width: 100%;
   background: white;
   box-shadow: 0 0px 4px rgba(0,0,0,0.25);
   border-radius: 5px 5px 0 0;
+}
+
+#form-div-element {
+  display: flex;
+  align-items: center;
 }

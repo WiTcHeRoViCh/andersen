@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import './TodoListInf.css'
+import './TodoListInf.css';
 
 class TodoListInf extends Component {
   constructor(props){
@@ -73,23 +73,3 @@ class TodoListInf extends Component {
 }
 
 export default TodoListInf;
-
-/*
-          <div id="all-todos">
-            <MuiThemeProvider>
-              <FlatButton label="All" onClick={ (e) => this.select(e) } />
-            </MuiThemeProvider>
-          </div>
-
-          <div id="active-todos">
-            <MuiThemeProvider>
-              <FlatButton label="Active" onClick={this.select} />
-            </MuiThemeProvider>
-          </div>
-
-          <div id="completed-todos">
-            <MuiThemeProvider>
-              <FlatButton label="Completed" onClick={ this.select } />
-            </MuiThemeProvider>
-          </div>
-*/

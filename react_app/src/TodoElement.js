@@ -36,7 +36,7 @@ class TodoElement extends Component {
     return (
       <MuiThemeProvider>
 
-        <Chip onRequestDelete={() => this.props.handleRequestDelete(this.props.id)} style= {chipStyle.chip}
+        <Chip onRequestDelete={() => this.props.handleRequestDelete(this.props.todo)} style= {chipStyle.chip}
          labelStyle={chipStyle.labelStyle} className = "todo-element">
 
           <Checkbox
