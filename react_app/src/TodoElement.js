@@ -30,31 +30,27 @@ class TodoElement extends Component {
       },
       labelStyle: {
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
       }
     }
     return (
       <MuiThemeProvider>
 
-        <Chip onRequestDelete={() => this.handleRequestDelete(this.props.id)} style= {chipStyle.chip}
+        <Chip onRequestDelete={() => this.props.handleRequestDelete(this.props.id)} style= {chipStyle.chip}
          labelStyle={chipStyle.labelStyle} className = "todo-element">
 
           <Checkbox
-            defaultChecked={this.props.todo.complete}
+            defaultChecked={this.props.todo.isComplete}
             checkedIcon={<ActionFavorite />}
             uncheckedIcon={<ActionFavoriteBorder />}
-            onCheck={() => this.props.setCompleteStatus(this.props.id)}
+            onCheck={() => this.props.handleCheck(this.props.id)}
           />
 
           {this.props.todo.text}
         </Chip>
 
-      </MuiThemeProvider>///
+      </MuiThemeProvider>
     )
-  }
-
-  handleRequestDelete = (id) => {
-    this.props.handleRequestDelete(id);
   }
 }
 

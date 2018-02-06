@@ -29,10 +29,10 @@ class Form extends Component {
               marginLeft: 20,
               fontSize: 19
             }}
-            />
+          />
         </MuiThemeProvider>
 
-      </form>///
+      </form>
     )
   }
 

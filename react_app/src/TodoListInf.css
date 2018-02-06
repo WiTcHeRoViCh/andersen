@@ -1,0 +1,23 @@
+#todo-list-settings{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  height: 60px;
+  background: white;
+  box-shadow: 0 0px 4px rgba(0,0,0,0.25);
+  margin-top: 1px;
+  border-radius: 0 0 5px 5px;
+}
+
+#active-todo-length {
+
+}
+
+#filter-todo-list {
+  display: flex;
+}
+
+#clean-complete-todo-list {
+  width: 170px;
+}
