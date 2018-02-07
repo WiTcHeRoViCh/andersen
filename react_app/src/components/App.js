@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from '../styles/logo.svg';
 import TodoForm from './Form';
 import DisplayTodosList from './DisplayTodosList';
 import TodoListInf from './TodoListInf';
-import './App.css';
 
-class App extends Component {
+import '../styles/App.css';
+
+export default class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       todoList: [],
-      curFilterId: null,
+      filterFunction: todos => todos,
       findTodo: null,
     };
   }
@@ -21,33 +22,43 @@ class App extends Component {
       <div id="main-container">
         <h1 id="todo-title">TODO list</h1>
 
-        <TodoForm handleAddTodo={this.AddTodo} findTodo={this.state.findTodo}
-          handleResetSearchResult={this.handleResetSearchResult} setFindTodo={this.setFindTodo}/>
+        <TodoForm
+          handleAddTodo={this.addTodo}
+          findTodo={this.state.findTodo}
+          handleResetSearchResult={this.handleResetSearchResult}
+          setFindTodo={this.setFindTodo}
+        />
 
-        <DisplayTodosList todoList={this.state.todoList}
+        <DisplayTodosList
+          todoList={this.state.todoList}
           handleRequestDelete = {this.handleRequestDelete}
-          handleCheck = {this.handleCheck} curFilterId={this.state.curFilterId} findTodo={this.state.findTodo}/>
+          handleCheck = {this.handleCheck}
+          filterFunction={this.state.filterFunction}
+          findTodo={this.state.findTodo}
+        />
 
         {
           (this.state.todoList.length > 0) ?
-            <TodoListInf todoList={this.state.todoList}
+            <TodoListInf
+              todoList={this.state.todoList}
               handleCompletedClean={this.handleCompletedClean}
-              handleSelect={this.handleSelect} curFilterId={this.state.curFilterId}/> : null
+              handleSelect={this.handleSelect}
+              filterFunction={this.state.filterFunction}
+            /> : null
         }
       </div>
     );
   }
 
 
-  AddTodo = (todo) => {
-    const findTodo = null;
+  addTodo = todo => {
     let todoList = Array.from(this.state.todoList);
     todoList.push({text: todo, isComplete: false});
 
-    this.setState({todoList, findTodo});
+    this.setState({todoList});
   }
 
-  handleRequestDelete = (todo) => {
+  handleRequestDelete = todo => {
     let todoList = Array.from(this.state.todoList);
     const idx = todoList.indexOf(todo)
     todoList.splice(idx, 1);
@@ -55,7 +66,7 @@ class App extends Component {
     this.setState({todoList})
   }
 
-  handleCheck = (id) => {
+  handleCheck = id => {
     let todoList = Array.from(this.state.todoList);
     todoList[id].isComplete == true ? todoList[id].isComplete = false : todoList[id].isComplete = true;
 
@@ -68,8 +79,8 @@ class App extends Component {
     this.setState({todoList});
   }
 
-  handleSelect = (curFilterId) => {
-    this.setState({curFilterId})
+  handleSelect = filterFunction => {
+    this.setState({filterFunction})
   }
 
   handleResetSearchResult = () => {
@@ -78,9 +89,7 @@ class App extends Component {
     this.setState({findTodo});
   }
 
-  setFindTodo = (findTodo) =>{
+  setFindTodo = findTodo =>{
     this.setState({findTodo});
   }
 }
-
-export default App;
