@@ -26,6 +26,7 @@ export default class TodoElement extends Component {
             checkedIcon={<ActionDone />}
             uncheckedIcon={<ActionDone />}
             onCheck={() => handleCheck(id)}
+            style={{width: 0}}
           />
 
           {todo.text}

@@ -18,6 +18,7 @@ const constants = {
       paddingRight: 20,
       marginTop: 1,
       height: 50,
+      width: "100%",
 
       backgroundColor: "white",
       borderRadius: 0,
