@@ -5,16 +5,18 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
-import constants from './constants/constants';
+import constants from '../constants/constants';
 
 import '../styles/Form.css';
+import { addTodo, setFindTodoText, resetFindTodoText } from '../actions/index';
 
-export default class Form extends Component {
+import { connect } from 'react-redux';
+class Form extends Component {
   constructor(props) {
     super(props);
 
     this.initialState = this.state = {
-      todo: '',
+      text: "",
       buttonLabel: "To find by",
       hintText: "done",
       isSearch: false,
@@ -22,17 +24,16 @@ export default class Form extends Component {
   }
 
   render(){
-    const { todo, buttonLabel, hintText, isSearch } = this.state;
+    const { text, buttonLabel, hintText, isSearch } = this.state;
 
     return (
-      <form id="form" onSubmit = {(e) => this.onSubmit(e, todo, isSearch)}>
+      <form id="form" onSubmit = {(e) => this.onSubmit(e, text, isSearch)}>
 
         <MuiThemeProvider>
           <TextField
             hintText={"Write what need to "+hintText }
             onChange = { (e) => this.handleChange(e, isSearch) }
-            value={todo}
-            name="todo"
+            value={text}
             style={{
               marginLeft: 20,
               fontSize: 19
@@ -42,16 +43,16 @@ export default class Form extends Component {
           <div id="form-div-element">
             <FlatButton
               label={buttonLabel}
-              onClick={() => this.handleClick(buttonLabel, todo)}
+              onClick={() => this.handleClick(buttonLabel, text)}
               style={{marginRight: 20}}
             />
 
             {
-              ( isSearch && todo) ?
+              ( isSearch && text) ?
               <IconButton
                 tooltip="Reset seach result"
                 onClick={ ()=>{
-                  this.setState(this.initialState); this.handleResetSearchResult()
+                  this.setState(this.initialState); this.props.handleResetFindTodoText()
                 } }
               >
                 <ActionDelete/>
@@ -59,42 +60,52 @@ export default class Form extends Component {
               : null
             }
           </div>
-
         </MuiThemeProvider>
 
       </form>
     )
   }
 
-  handleClick = (btnLabel, todo) => {
+  handleClick = (btnLabel, text) => {
     const [buttonLabel, hintText, isSearch]  = (btnLabel === "To find by") ?
     constants.formField.inSearch :
     constants.formField.inAdding;
 
     this.setState({buttonLabel, hintText, isSearch});
-    (isSearch) ? this.props.setFindTodo(todo) : this.handleResetSearchResult();
+    (isSearch) ? this.props.setFindTodoText(text) : this.props.handleResetFindTodoText();
   }
 
   handleChange = (e, isSearch) => {
-    let todo = e.target;
+    let textField = e.target;
+    let value = textField.value;
 
-    let name = todo.name;
-    let value = todo.value;
-
-    this.setState({[name]: value});
-
-    (isSearch === true) ? this.props.setFindTodo(value) : null;
+    this.setState({text: value});
+    (isSearch) ? this.props.setFindTodoText(value) : null;
   }
 
-  onSubmit = (e, todo, isSearch) => {
+  onSubmit = (e, text, isSearch) => {
     e.preventDefault();
-    if (todo.length <= 0 || isSearch) return
+    if (text.length <= 0 || isSearch) return
+
+    const todo = {
+      id: Date.now().toString(),
+      text: text,
+      isComplete: false,
+    }
 
     this.setState(this.initialState);
     this.props.handleAddTodo(todo);
   }
 
-  handleResetSearchResult = () => {
-    this.props.handleResetSearchResult();
-  }
 }
+
+export default connect(
+  state => ({
+    text: state.filter.findTodo,
+  }),
+  dispatch => ({
+    handleAddTodo: todo => dispatch(addTodo(todo)),
+    setFindTodoText: text => dispatch(setFindTodoText(text)),
+    handleResetFindTodoText: () => dispatch(resetFindTodoText()),
+  })
+)(Form)

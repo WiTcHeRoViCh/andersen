@@ -1,8 +1,12 @@
+import { VISIBILITY } from "./ActionTypes";
+
+const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = VISIBILITY;
+
 const constants = {
   buttons: [
-    { label: "all", filterFunction: todos => todos },
-    { label: "active", filterFunction: todos => todos.filter( todo => todo.isComplete === false) },
-    { label: "completed", filterFunction: todos => todos.filter( todo => todo.isComplete === true) },
+    { label: "all", filterFunctionType: SHOW_ALL },
+    { label: "active", filterFunctionType: SHOW_ACTIVE },
+    { label: "completed", filterFunctionType: SHOW_COMPLETED },
   ],
   formField: {
     inSearch: ["Add new task", "find", true],

@@ -1,0 +1,15 @@
+export const ADD_TODO = "ADD_TODO";
+export const DELETE_TODO = "DELETE_TODO";
+export const TOGGLE_TODO = "TOGGLE_TODO";
+export const DELETE_COMPLETED = "DELETE_COMPLETED";
+
+export const FIND_TODO = "FIND_TODO";
+
+export const VISIBILITY = {
+  SHOW_ALL: "SHOW_ALL",
+  SHOW_ACTIVE: "SHOW_ACTIVE",
+  SHOW_COMPLETED: "SHOW_COMPLETED",
+};
+
+export const SET_FIND_TODO_TEXT = "SET_FIND_TODO_TEXT";
+export const RESET_FIND_TODO_TEXT = "RESET_FIND_TODO_TEXT";

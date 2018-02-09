@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
 import TodoElement from './TodoElement';
+import { connect } from 'react-redux';
 
 import '../styles/DisplayTodosList.css';
 
-export default class DisplayTodosList extends Component {
+class DisplayTodosList extends Component {
 
   render (){
-    const { todoList, filterFunction, handleRequestDelete, findTodo, handleCheck } = this.props;
-
+    const { todoList, findTodo, filterFunction } = this.props;
     const chipData = this.filterTodoList(todoList, findTodo, filterFunction).map( (todo, id) => {
       return (
         <TodoElement
           key={id}
           todo={todo}
-          handleRequestDelete = {handleRequestDelete}
-          handleCheck={handleCheck}
-          id={id}
         />
       );
     });
@@ -33,3 +30,14 @@ export default class DisplayTodosList extends Component {
     return filterFunction(todos);
   }
 }
+
+export default connect(
+  state => ({
+    todoList: state.todoList,
+    filterFunction: state.filter.filterFunction,
+    findTodo: state.filter.findTodo,
+  }),
+  dispatch => ({
+
+  })
+)(DisplayTodosList)

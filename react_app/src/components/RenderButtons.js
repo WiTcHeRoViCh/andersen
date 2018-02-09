@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import constants from './constants/constants';
+import { showFilteredTodos } from '../actions/index';
+import { connect } from 'react-redux';
+import constants from '../constants/constants';
 
-export default class RenderButtons extends Component {
+class RenderButtons extends Component {
 
   render() {
     const buttons = constants.buttons.map( (button, id) => {
@@ -14,7 +16,7 @@ export default class RenderButtons extends Component {
             <FlatButton
               label={button.label}
               id={id}
-              onClick={ e => this.props.handleSelect(button.filterFunction) }
+              onClick={ e => this.props.handleClick(button.filterFunctionType) }
             />
           </MuiThemeProvider>
         );
@@ -26,3 +28,12 @@ export default class RenderButtons extends Component {
     );
   }
 }
+
+export default connect(
+  state => ({
+
+  }),
+  dispatch => ({
+    handleClick: filterFunctionType => dispatch(showFilteredTodos(filterFunctionType)),
+  })
+)(RenderButtons)
