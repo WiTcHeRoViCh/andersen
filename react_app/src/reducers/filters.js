@@ -10,20 +10,20 @@ const initialState = {
 export default function filterTodoList(state=initialState, action){
   switch(action.type){
     case SHOW_ALL:
-      return Object.assign({}, state, { filterFunction: todos => todos} );
+      return {...state, filterFunction: todos => todos }
 
     case SHOW_ACTIVE:
-      return Object.assign({}, state, { filterFunction: todos => todos.filter( todo => todo.isComplete === false) });
+      return {...state, filterFunction: todos => todos.filter( todo => todo.isComplete === false) }
 
     case SHOW_COMPLETED:
-      return Object.assign({}, state, { filterFunction: todos => todos.filter( todo => todo.isComplete === true) });
+      return {...state, filterFunction: todos => todos.filter( todo => todo.isComplete === true)}
 
 
     case SET_FIND_TODO_TEXT:
-      return Object.assign({}, state, {findTodo: action.text});
+      return {...state, findTodo: action.text}
 
     case RESET_FIND_TODO_TEXT:
-      return Object.assign({}, state, {findTodo: ""});
+      return {...state, findTodo: ""}
 
     default:
       return state;

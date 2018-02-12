@@ -13,10 +13,9 @@ import { Provider } from 'react-redux';
 const todoApp = combineReducers({
   todoList: todos,
   filter,
-})
+});
 
-let store = createStore(todoApp)
-
+let store = createStore(todoApp);
 
 ReactDOM.render(
     <Provider store={store}>

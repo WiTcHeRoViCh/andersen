@@ -6,7 +6,7 @@ export default function todos(state=[], action) {
       return [...state, action.todo]
 
     case TOGGLE_TODO:
-      return state.map( todo => (todo.id === action.id) ? Object.assign(todo, {isComplete: !todo.isComplete}) : todo )
+      return state.map( todo => (todo.id === action.id) ? {...todo, isComplete: !todo.isComplete} : todo )
 
     case DELETE_TODO:
       return state.filter( todo => todo.id !== action.id )
