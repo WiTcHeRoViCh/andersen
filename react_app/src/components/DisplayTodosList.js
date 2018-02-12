@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TodoElement from './TodoElement';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { deleteTodo, toggleTodo } from '../actions/index';
 
 import '../styles/DisplayTodosList.css';
 
@@ -16,7 +18,8 @@ class DisplayTodosList extends Component {
         <TodoElement
           key={id}
           todo={todo}
-          todos={[]}
+          handleCheck={(id) => this.props.toggleTodo(id, this.props)}
+          handleRequestDelete={this.props.deleteTodo}
         />
       );
     });
@@ -35,11 +38,19 @@ class DisplayTodosList extends Component {
   }
 }
 
+const mapStateToProps = ({todoList, filter}) => {
+  return {
+      todoList: todoList,
+      filterFunction: filter.filterFunction,
+      findTodo: filter.findTodo,
+  }
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    deleteTodo, toggleTodo
+}, dispatch);
+
 export default connect(
-  state => ({
-    todoList: state.todoList,
-    filterFunction: state.filter.filterFunction,
-    findTodo: state.filter.findTodo,
-  }),
-  null,
+    mapStateToProps,
+    mapDispatchToProps
 )(DisplayTodosList)

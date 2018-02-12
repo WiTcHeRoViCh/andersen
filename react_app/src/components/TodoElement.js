@@ -5,25 +5,10 @@ import Checkbox from 'material-ui/Checkbox';
 import ActionDone from 'material-ui/svg-icons/action/done';
 
 import constants from '../constants/constants';
-import { deleteTodo, toggleTodo } from '../actions/index';
-import { connect } from 'react-redux';
 
 import '../styles/TodoElement.css'
 
-class TodoElement extends Component {
-
-  onCheck = () => {
-    const id = this.props.todo.id;
-
-    this.props.handleCheck(id);
-  }
-
-  onRequestDelete = () => {
-    const id = this.props.todo.id;
-
-    this.props.handleRequestDelete(id);
-  }
-
+export default class extends Component {
   render () {
     const { todo } = this.props;
     const chipStyle = constants.chipStyle;
@@ -52,11 +37,3 @@ class TodoElement extends Component {
     )
   }
 }
-
-export default connect(
-  null,
-  dispatch => ({
-    handleRequestDelete: id => dispatch(deleteTodo(id)),
-    handleCheck: id => dispatch(toggleTodo(id)),
-  })
-)(TodoElement)
