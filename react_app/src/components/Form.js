@@ -27,9 +27,8 @@ class Form extends Component {
     const { text, buttonLabel, hintText, isSearch } = this.state;
 
     return (
-      <form id="form" onSubmit = {(e) => this.onSubmit(e, text, isSearch)}>
-
-        <MuiThemeProvider>
+      <MuiThemeProvider>
+        <form id="form" onSubmit = {(e) => this.onSubmit(e, text, isSearch)}>
           <TextField
             hintText={"Write what need to "+hintText }
             onChange = { (e) => this.handleChange(e, isSearch) }
@@ -60,9 +59,8 @@ class Form extends Component {
               : null
             }
           </div>
-        </MuiThemeProvider>
-
-      </form>
+        </form>
+      </MuiThemeProvider>
     )
   }
 
@@ -72,7 +70,7 @@ class Form extends Component {
     constants.formField.inAdding;
 
     this.setState({buttonLabel, hintText, isSearch});
-    (isSearch) ? this.props.setFindTodoText(text) : this.props.handleResetFindTodoText();
+    return (isSearch) ? this.props.setFindTodoText(text) : this.props.handleResetFindTodoText();
   }
 
   handleChange = (e, isSearch) => {

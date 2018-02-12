@@ -8,9 +8,12 @@ import '../styles/DisplayTodosList.css';
 
 class DisplayTodosList extends Component {
 
+  componentWillReceiveProps(props){
+  }
+
   render (){
-    const { todoList, findTodo, filterFunction } = this.props;
-    const chipData = this.filterTodoList(todoList, findTodo, filterFunction).map( (todo, id) => {
+    const { todoList, findTodo } = this.props;
+    const chipData = this.filterTodoList(todoList, findTodo).map( (todo, id) => {
       return (
         <TodoElement
           key={id}
@@ -28,10 +31,10 @@ class DisplayTodosList extends Component {
     )
   }
 
-  filterTodoList = (todos, findTodo, filterFunction) => {
+  filterTodoList = (todos, findTodo) => {
     todos = findTodo ? todos.filter( todo => todo.text.includes(findTodo) ) : todos; //findTodo it is word for search when in search mode
 
-    return filterFunction(todos);
+    return this.props.filterFunction(todos);
   }
 }
 

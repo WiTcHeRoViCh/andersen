@@ -23,8 +23,9 @@ export default function filterTodoList(state=initialState, action){
       return Object.assign({}, state, {findTodo: action.text});
 
     case RESET_FIND_TODO_TEXT:
-      return Object.assign({}, state, {findTodo: null});
-  }
+      return Object.assign({}, state, {findTodo: ""});
 
-  return state;
+    default:
+      return state;
+  }
 }
