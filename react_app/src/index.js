@@ -7,16 +7,15 @@ import registerServiceWorker from './components/registerServiceWorker';
 import todos from "./reducers/todos";
 import filter from "./reducers/filters";
 
-import { combineReducers } from 'redux';
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 
 const todoApp = combineReducers({
   todoList: todos,
-  filter
+  filter,
 })
 
-let store = createStore(todoApp);
+let store = createStore(todoApp)
 
 
 ReactDOM.render(
