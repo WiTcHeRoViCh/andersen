@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RenderButtons from './RenderButtons';
 import { deleteCompleted } from '../actions/index';
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import '../styles/TodoListInf.css';
@@ -30,7 +31,7 @@ class TodoListInf extends Component {
                   <FlatButton
                     label="Clear completed"
                     name="clean"
-                    onClick={ () => this.props.handleCompletedClean() }
+                    onClick={ () => this.props.deleteCompleted() }
                   />
                   : null
               }
@@ -45,11 +46,17 @@ class TodoListInf extends Component {
   }
 }
 
+const mapStateToProps = ({todoList}) => {
+  return {
+    todoList: todoList,
+  }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    deleteCompleted
+}, dispatch);
+
 export default connect(
-  state => ({
-    todoList: state.todoList,
-  }),
-  dispatch => ({
-    handleCompletedClean: () => dispatch(deleteCompleted()),
-  })
+  mapStateToProps,
+  mapDispatchToProps
 )(TodoListInf)

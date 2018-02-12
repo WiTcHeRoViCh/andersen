@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import '../styles/Form.css';
 
 class Form extends Component {
+
   constructor(props) {
     super(props);
 

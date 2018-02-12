@@ -9,6 +9,9 @@ import constants from '../constants/constants';
 import '../styles/TodoElement.css'
 
 export default class extends Component {
+
+  displayName = "TodoElement";
+
   render () {
     const { todo } = this.props;
     const chipStyle = constants.chipStyle;
