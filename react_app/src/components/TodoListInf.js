@@ -17,7 +17,6 @@ class TodoListInf extends Component {
     const completedTodoList = this.props.todoList.filter ( todo => {
       return todo.isComplete === true;
     });
-
     const todoListInf =
         <div id="todo-list-settings">
           <div id="active-todo-length">Items left: {ActiveTodoList.length}</div>

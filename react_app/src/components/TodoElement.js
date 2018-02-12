@@ -12,12 +12,13 @@ export default class extends Component {
   render () {
     const { todo } = this.props;
     const chipStyle = constants.chipStyle;
+    const id = todo.id;
 
     return (
       <MuiThemeProvider>
 
         <Chip
-          onRequestDelete={ this.onRequestDelete }
+          onRequestDelete={ () => this.props.handleRequestDelete(id) }
           style= {chipStyle.chip}
           labelStyle={chipStyle.labelStyle}
           className = "todo-element">
@@ -26,7 +27,7 @@ export default class extends Component {
             defaultChecked={todo.isComplete}
             checkedIcon={<ActionDone />}
             uncheckedIcon={<ActionDone />}
-            onCheck={ this.onCheck }
+            onCheck={ () => this.props.handleCheck(id) }
             style={{width: 0}}
           />
 

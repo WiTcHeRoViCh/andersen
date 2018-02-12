@@ -10,17 +10,15 @@ class RenderButtons extends Component {
 
   render() {
     const buttons = constants.buttons.map( (button, id) => {
-
         return (
           <MuiThemeProvider key={id}>
             <FlatButton
               label={button.label}
               id={id}
-              onClick={ e => this.props.handleClick(button.filterFunctionType) }
+              onClick={ () => this.props.handleClick(button.filterFunctionType) }
             />
           </MuiThemeProvider>
         );
-
       })
 
     return (
@@ -30,9 +28,7 @@ class RenderButtons extends Component {
 }
 
 export default connect(
-  state => ({
-
-  }),
+  null,
   dispatch => ({
     handleClick: filterFunctionType => dispatch(showFilteredTodos(filterFunctionType)),
   })

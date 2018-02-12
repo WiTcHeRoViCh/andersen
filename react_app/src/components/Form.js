@@ -6,11 +6,12 @@ import IconButton from 'material-ui/IconButton';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
 
 import constants from '../constants/constants';
+import { bindActionCreators } from 'redux';
+import { addTodo, setFindTodoText, resetFindTodoText } from '../actions/index';
+import { connect } from 'react-redux';
 
 import '../styles/Form.css';
-import { addTodo, setFindTodoText, resetFindTodoText } from '../actions/index';
 
-import { connect } from 'react-redux';
 class Form extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +52,7 @@ class Form extends Component {
               <IconButton
                 tooltip="Reset seach result"
                 onClick={ ()=>{
-                  this.setState(this.initialState); this.props.handleResetFindTodoText()
+                  this.setState(this.initialState); this.props.resetFindTodoText()
                 } }
               >
                 <ActionDelete/>
@@ -70,7 +71,7 @@ class Form extends Component {
     constants.formField.inAdding;
 
     this.setState({buttonLabel, hintText, isSearch});
-    return (isSearch) ? this.props.setFindTodoText(text) : this.props.handleResetFindTodoText();
+    return (isSearch) ? this.props.setFindTodoText(text) : this.props.resetFindTodoText();
   }
 
   handleChange = (e, isSearch) => {
@@ -92,18 +93,22 @@ class Form extends Component {
     }
 
     this.setState(this.initialState);
-    this.props.handleAddTodo(todo);
+    this.props.addTodo(todo);
   }
 
 }
 
+const mapStateToProps = ({filter}) => {
+  return {
+    text: filter.findTodo
+  }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+    addTodo, setFindTodoText, resetFindTodoText
+}, dispatch);
+
 export default connect(
-  state => ({
-    text: state.filter.findTodo,
-  }),
-  dispatch => ({
-    handleAddTodo: todo => dispatch(addTodo(todo)),
-    setFindTodoText: text => dispatch(setFindTodoText(text)),
-    handleResetFindTodoText: () => dispatch(resetFindTodoText()),
-  })
+  mapStateToProps,
+  mapDispatchToProps
 )(Form)
