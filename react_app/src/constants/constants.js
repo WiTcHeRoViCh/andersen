@@ -2,7 +2,7 @@ import { VISIBILITY } from "./ActionTypes";
 
 const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = VISIBILITY;
 
-const constants = {
+export default {
   buttons: [
     { label: "all", filterFunctionType: SHOW_ALL },
     { label: "active", filterFunctionType: SHOW_ACTIVE },
@@ -31,7 +31,10 @@ const constants = {
       display: "flex",
       flexDirection: "row",
     }
+  },
+  filterFunctions: {
+    SHOW_ALL: todos => todos,
+    SHOW_ACTIVE: todos => todos.filter( todo => todo.isComplete === false),
+    SHOW_COMPLETED: todos => todos.filter( todo => todo.isComplete === true),
   }
 };
-
-export default constants;

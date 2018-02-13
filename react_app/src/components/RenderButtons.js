@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import { showFilteredTodos } from '../actions/index';
+import { setFilterFunctionType } from '../actions/index';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import constants from '../constants/constants';
@@ -15,7 +15,7 @@ class RenderButtons extends Component {
             <FlatButton
               label={button.label}
               id={id}
-              onClick={ () => this.props.showFilteredTodos(button.filterFunctionType) }
+              onClick={ () => this.props.setFilterFunctionType(button.filterFunctionType) }
             />
           </MuiThemeProvider>
         );
@@ -28,7 +28,7 @@ class RenderButtons extends Component {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    showFilteredTodos,
+    setFilterFunctionType,
 }, dispatch);
 
 export default connect(

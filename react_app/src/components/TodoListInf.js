@@ -48,7 +48,7 @@ class TodoListInf extends Component {
 
 const mapStateToProps = ({todoList}) => {
   return {
-    todoList: todoList,
+    todoList: todoList.todoList,
   }
 }
 

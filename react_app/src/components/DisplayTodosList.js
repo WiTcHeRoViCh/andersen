@@ -2,24 +2,27 @@ import React, { Component } from 'react';
 import TodoElement from './TodoElement';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { deleteTodo, toggleTodo } from '../actions/index';
+import { deleteTodoFromdb, toggleTodo, getTodoList } from '../actions/index';
+
+import constants from '../constants/constants';
 
 import '../styles/DisplayTodosList.css';
 
 class DisplayTodosList extends Component {
 
-  componentWillReceiveProps(props){
+  componentWillMount() {
+    this.props.getTodoList()
   }
 
   render (){
-    const { todoList, findTodo } = this.props;
-    const chipData = this.filterTodoList(todoList, findTodo).map( (todo, id) => {
+    const { todoList, findTodo, filterFunctionType } = this.props;
+    const chipData = this.filterTodoList(todoList, findTodo, filterFunctionType).map( (todo, id) => {
       return (
         <TodoElement
           key={id}
           todo={todo}
           handleCheck={(id) => this.props.toggleTodo(id, this.props)}
-          handleRequestDelete={this.props.deleteTodo}
+          handleRequestDelete={this.props.deleteTodoFromdb}
         />
       );
     });
@@ -31,23 +34,24 @@ class DisplayTodosList extends Component {
     )
   }
 
-  filterTodoList = (todos, findTodo) => {
+  filterTodoList = (todos, findTodo, filterFunctionType) => {
+    const filterFunction = constants.filterFunctions[filterFunctionType];
     todos = findTodo ? todos.filter( todo => todo.text.includes(findTodo) ) : todos; //findTodo it is word for search when in search mode
 
-    return this.props.filterFunction(todos);
+    return filterFunction(todos);
   }
 }
 
 const mapStateToProps = ({todoList, filter}) => {
   return {
-      todoList: todoList,
-      filterFunction: filter.filterFunction,
+      todoList: todoList.todoList,
+      filterFunctionType: filter.filterFunctionType,
       findTodo: filter.findTodo,
   }
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    deleteTodo, toggleTodo
+    deleteTodoFromdb, toggleTodo, getTodoList
 }, dispatch);
 
 export default connect(

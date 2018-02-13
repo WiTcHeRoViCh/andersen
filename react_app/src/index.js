@@ -4,18 +4,8 @@ import './styles/index.css';
 import App from './components/App';
 import registerServiceWorker from './components/registerServiceWorker';
 
-import todos from "./reducers/todos";
-import filter from "./reducers/filters";
-
-import { createStore, combineReducers } from 'redux';
-import { Provider } from 'react-redux';
-
-const todoApp = combineReducers({
-  todoList: todos,
-  filter,
-});
-
-let store = createStore(todoApp);
+import store from './store/configureStore'
+import { Provider } from 'react-redux'
 
 ReactDOM.render(
     <Provider store={store}>

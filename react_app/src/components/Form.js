@@ -7,10 +7,11 @@ import ActionDelete from 'material-ui/svg-icons/action/delete';
 
 import constants from '../constants/constants';
 import { bindActionCreators } from 'redux';
-import { addTodo, setFindTodoText, resetFindTodoText } from '../actions/index';
+import { setFindTodoText, resetFindTodoText, addTodoTodb } from '../actions';
 import { connect } from 'react-redux';
 
 import '../styles/Form.css';
+
 
 class Form extends Component {
 
@@ -94,7 +95,7 @@ class Form extends Component {
     }
 
     this.setState(this.initialState);
-    this.props.addTodo(todo);
+    this.props.addTodoTodb(todo);
   }
 
 }
@@ -106,7 +107,7 @@ const mapStateToProps = ({filter}) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    addTodo, setFindTodoText, resetFindTodoText
+    setFindTodoText, resetFindTodoText, addTodoTodb
 }, dispatch);
 
 export default connect(

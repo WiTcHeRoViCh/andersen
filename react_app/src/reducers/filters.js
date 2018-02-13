@@ -4,20 +4,15 @@ const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = VISIBILITY;
 
 const initialState = {
   findTodo: "",
-  filterFunction: todos => todos,
+  filterFunctionType: SHOW_ALL,
 }
 
 export default function filterTodoList(state=initialState, action){
   switch(action.type){
     case SHOW_ALL:
-      return {...state, filterFunction: todos => todos }
-
     case SHOW_ACTIVE:
-      return {...state, filterFunction: todos => todos.filter( todo => todo.isComplete === false) }
-
     case SHOW_COMPLETED:
-      return {...state, filterFunction: todos => todos.filter( todo => todo.isComplete === true)}
-
+      return {...state, filterFunctionType: action.type }
 
     case SET_FIND_TODO_TEXT:
       return {...state, findTodo: action.text}
