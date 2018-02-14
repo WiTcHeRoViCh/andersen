@@ -20,9 +20,9 @@ export const getTodoList = (todo) => dispatch => {
     })
     .catch( error => {
       dispatch( {type: `${t.GET_TODO_LIST} ${t.FAILURE}`, res: error } );
-      console.log(error);
+      process.env.NODE_ENV === "development" && console.warn(error);
     })
-  }, 1000 );
+  }, 4000 );
 
 }
 
@@ -31,15 +31,13 @@ export const addTodoTodb = todo => dispatch => {
 
   const newTodo = db.child("todoList/"+todo.id);
 
-  setTimeout( ()=> {
-    newTodo.set(todo).then( response => {
-      dispatch( {type: `${t.ADD_TODO_TO_DB} ${t.SUCCESS}`, todo: todo} )
-    })
-    .catch( error => {
-      dispatch( {type: `${t.ADD_TODO_TO_DB} ${t.FAILURE}`} )
-      console.log(error);
-    })
-  }, 4000);
+  newTodo.set(todo).then( response => {
+    dispatch( {type: `${t.ADD_TODO_TO_DB} ${t.SUCCESS}`, todo: todo} )
+  })
+  .catch( error => {
+    dispatch( {type: `${t.ADD_TODO_TO_DB} ${t.FAILURE}`} );
+    process.env.NODE_ENV === "development" && console.warn(error);
+  })
 }
 
 export const deleteTodoFromdb = id => dispatch => {
@@ -47,31 +45,27 @@ export const deleteTodoFromdb = id => dispatch => {
 
   const dbTodo = db.child("todoList/"+id);
 
-  setTimeout( () => {
-    dbTodo.child("todoList/"+id).remove().then ( response => {
-      dispatch({ type: `${t.DELETE_TODO_FROM_DB} ${t.SUCCESS}`, id: id });
-    })
-    .catch( error => {
-      dispatch({ type: `${t.DELETE_TODO_FROM_DB} ${t.FAILURE}` });
-      console.log(error);
-    })
-  }, 3000 );
+  dbTodo.child("todoList/"+id).remove().then ( response => {
+    dispatch({ type: `${t.DELETE_TODO_FROM_DB} ${t.SUCCESS}`, id: id });
+  })
+  .catch( error => {
+    dispatch({ type: `${t.DELETE_TODO_FROM_DB} ${t.FAILURE}` });
+    process.env.NODE_ENV === "development" && console.warn(error);
+  })
 }
 
 export const deleteCompletedFromdb = (completedTodosId) => dispatch => {
   dispatch({ type: `${t.DELETE_COMPLETED_FROM_DB} ${t.REQUEST}` });
 
-  setTimeout( ()=>{
-    db.child("todoList").once('value').then( response => {
-      completedTodosId.forEach( todoId => {
-        db.child("todoList/"+todoId).remove();
-      });
+  db.child("todoList").once('value').then( response => {
+    completedTodosId.forEach( todoId => {
+      db.child("todoList/"+todoId).remove();
+    });
 
-      dispatch({ type: `${t.DELETE_COMPLETED_FROM_DB} ${t.SUCCESS}` });
-    })
-    .catch( error => {
-      dispatch({ type: `${t.DELETE_COMPLETED_FROM_DB} ${t.FAILURE}` });
-      console.log(error);
-    })
-  }, 2000 );
+    dispatch({ type: `${t.DELETE_COMPLETED_FROM_DB} ${t.SUCCESS}` });
+  })
+  .catch( error => {
+    dispatch({ type: `${t.DELETE_COMPLETED_FROM_DB} ${t.FAILURE}` });
+    process.env.NODE_ENV === "development" && console.warn(error);
+  })
 }

@@ -14,6 +14,13 @@ class DisplayTodosList extends Component {
     this.props.getTodoList();
   }
 
+  filterTodoList = (todos, findTodo, filterFunctionType) => {
+    const filterFunction = constants.filterFunctions[filterFunctionType];
+    todos = findTodo ? todos.filter( todo => todo.text.includes(findTodo) ) : todos; //findTodo it is word for search when in search mode
+
+    return filterFunction(todos);
+  }
+
   render (){
     const { todoList, findTodo, filterFunctionType } = this.props;
     const chipData = this.filterTodoList(todoList, findTodo, filterFunctionType).map( (todo, id) => {
@@ -32,13 +39,6 @@ class DisplayTodosList extends Component {
         {chipData}
       </div>
     )
-  }
-
-  filterTodoList = (todos, findTodo, filterFunctionType) => {
-    const filterFunction = constants.filterFunctions[filterFunctionType];
-    todos = findTodo ? todos.filter( todo => todo.text.includes(findTodo) ) : todos; //findTodo it is word for search when in search mode
-
-    return filterFunction(todos);
   }
 }
 

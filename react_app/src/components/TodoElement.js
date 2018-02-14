@@ -19,7 +19,6 @@ export default class extends Component {
 
     return (
       <MuiThemeProvider>
-
         <Chip
           onRequestDelete={ () => this.props.handleRequestDelete(id) }
           style= {chipStyle.chip}

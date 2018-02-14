@@ -38,21 +38,23 @@ export default {
     SHOW_COMPLETED: todos => todos.filter( todo => todo.isComplete === true),
   },
   status: {
-    request: {
-      getTodoListRequest: true,
-      getTodoListSuccess: false,
-      getTodoListFailure: false
-    },
-    success: {
-      getTodoListRequest: false,
-      getTodoListSuccess: true,
-      getTodoListFailure: false
-    },
-    failure: {
-      getTodoListRequest: false,
-      getTodoListSuccess: false,
-      getTodoListFailure: true
-    }
-}
+    request: (type) => {
+      const action = type.split(" ")[0];
+      const newStatus = {[action]: {request: true, success: false, failure: false}};
 
+      return newStatus;
+    },
+    success: (type) => {
+      const action = type.split(" ")[0];
+      const newStatus = {[action]: {request: false, success: true, failure: false}};
+
+      return newStatus;
+    },
+    failure: (type) => {
+      const action = type.split(" ")[0];
+      const newStatus = {[action]: {request: false, success: false, failure: true}};
+
+      return newStatus;
+    }
+  }
 };

@@ -3,11 +3,13 @@ import constants from '../constants/constants';
 
 
 const { request, success, failure } = constants.status;
+const defaultStatus = { request: false, success: false, failure: false};
 const initialState = {
   todoList: [],
-  getTodoListRequest: false,
-  getTodoListSuccess: false,
-  getTodoListFailure: false,
+
+  [t.GET_TODO_LIST]: defaultStatus,
+  [t.ADD_TODO_TO_DB]: defaultStatus,
+  [t.DELETE_TODO_FROM_DB]: defaultStatus,
 }
 
 export default function todos(state=initialState, action) {
@@ -18,53 +20,52 @@ export default function todos(state=initialState, action) {
 
 //Set new todos list
     case `${t.GET_TODO_LIST} ${t.REQUEST}`:
-      return {...state, ...request }
+      return {...state, ...request(action.type) }
 
     case `${t.GET_TODO_LIST} ${t.SUCCESS}`:
-      return {...state, todoList: action.res, ...success }
+      return {...state, todoList: action.res, ...success(action.type) }
 
     case `${t.GET_TODO_LIST} ${t.FAILURE}`:
-      return {...state, ...failure }
+      return {...state, ...failure(action.type) }
 
 
 //Add todo
     case `${t.ADD_TODO_TO_DB} ${t.REQUEST}`:
-      return { ...state, ...request }
+      return { ...state, ...request(action.type) }
 
     case `${t.ADD_TODO_TO_DB} ${t.SUCCESS}`:
-      return { ...state, todoList: [...state.todoList, action.todo], ...success }
+      return { ...state, todoList: [...state.todoList, action.todo], ...success(action.type) }
 
     case `${t.ADD_TODO_TO_DB} ${t.FAILURE}`:
-      return { ...state, ...failure }
+      return { ...state, ...failure(action.type) }
 
 
 //Delete singl todo
     case `${t.DELETE_TODO_FROM_DB} ${t.REQUEST}`:
-      return { ...state, ...request }
+      return { ...state, ...request(action.type) }
 
     case `${t.DELETE_TODO_FROM_DB} ${t.SUCCESS}`:
       return { ...state,
         todoList: state.todoList.filter( todo => todo.id !== action.id ),
-        ...success
+        ...success(action.type)
       }
 
     case `${t.DELETE_TODO_FROM_DB} ${t.FAILURE}`:
-      return { ...state, ...failure }
+      return { ...state, ...failure(action.type) }
 
 
 //Delete completed todo
     case `${t.DELETE_COMPLETED_FROM_DB} ${t.REQUEST}`:
-      return { ...state, ...request }
+      return { ...state, ...request(action.type) }
 
     case `${t.DELETE_COMPLETED_FROM_DB} ${t.SUCCESS}`:
-    console.log(state)
       return { ...state,
         todoList: state.todoList.filter( todo => todo.isComplete === false ),
-        ...success
+        ...success(action.type)
       }
 
     case `${t.DELETE_COMPLETED_FROM_DB} ${t.FAILURE}`:
-      return { ...state, ...failure }
+      return { ...state, ...failure(action.type) }
 
 
     default:

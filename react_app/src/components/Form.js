@@ -26,46 +26,9 @@ class Form extends Component {
     }
   }
 
-  render(){
-    const { text, buttonLabel, hintText, isSearch } = this.state;
-
-    return (
-      <MuiThemeProvider>
-        <form id="form" onSubmit = {(e) => this.onSubmit(e, text, isSearch)}>
-          <TextField
-            hintText={"Write what need to "+hintText }
-            onChange = { (e) => this.handleChange(e, isSearch) }
-            value={text}
-            style={{
-              marginLeft: 20,
-              fontSize: 19
-            }}
-          />
-
-          <div id="form-div-element">
-            <FlatButton
-              label={buttonLabel}
-              onClick={() => this.handleClick(buttonLabel, text)}
-              style={{marginRight: 20}}
-            />
-
-            {( isSearch && text) ?
-              <IconButton
-                tooltip="Reset seach result"
-                onClick={ ()=>{
-                  this.setState(this.initialState); this.props.resetFindTodoText()
-                } }
-              >
-                <ActionDelete/>
-              </IconButton>
-              : null
-            }
-
-            { this.props.statusRequest && <div className="loader"></div> }
-          </div>
-        </form>
-      </MuiThemeProvider>
-    )
+  handleIconClick = () => {
+    this.setState(this.initialState);
+    this.props.resetFindTodoText();
   }
 
   handleClick = (btnLabel, text) => {
@@ -99,12 +62,51 @@ class Form extends Component {
     this.props.addTodoTodb(todo);
   }
 
+  render(){
+    const { text, buttonLabel, hintText, isSearch } = this.state;
+
+    return (
+      <MuiThemeProvider>
+        <form id="form" onSubmit = {(e) => this.onSubmit(e, text, isSearch)}>
+          <TextField
+            hintText={"Write what need to "+hintText }
+            onChange = { (e) => this.handleChange(e, isSearch) }
+            value={text}
+            style={{
+              marginLeft: 20,
+              fontSize: 19
+            }}
+          />
+
+          <div id="form-div-element">
+            <FlatButton
+              label={buttonLabel}
+              onClick={() => this.handleClick(buttonLabel, text)}
+              style={{marginRight: 20}}
+            />
+
+            {( isSearch && text) ?
+              <IconButton
+                tooltip="Reset seach result"
+                onClick={ this.handleIconClick }
+              >
+                <ActionDelete/>
+              </IconButton>
+              : null
+            }
+
+            { this.props.statusRequest && <div className="loader"></div> }
+          </div>
+        </form>
+      </MuiThemeProvider>
+    )
+  }
 }
 
 const mapStateToProps = ({todoList, filter}) => {
   return {
     text: filter.findTodo,
-    statusRequest: todoList.getTodoListRequest,
+    statusRequest: todoList.GET_TODO_LIST.request,
   }
 }
 
