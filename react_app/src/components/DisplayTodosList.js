@@ -10,8 +10,8 @@ import '../styles/DisplayTodosList.css';
 
 class DisplayTodosList extends Component {
 
-  componentWillMount() {
-    this.props.getTodoList()
+  componentDidMount() {
+    this.props.getTodoList();
   }
 
   render (){
@@ -44,17 +44,17 @@ class DisplayTodosList extends Component {
 
 const mapStateToProps = ({todoList, filter}) => {
   return {
-      todoList: todoList.todoList,
-      filterFunctionType: filter.filterFunctionType,
-      findTodo: filter.findTodo,
+    todoList: todoList.todoList,
+    filterFunctionType: filter.filterFunctionType,
+    findTodo: filter.findTodo,
   }
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    deleteTodoFromdb, toggleTodo, getTodoList
+  deleteTodoFromdb, toggleTodo, getTodoList
 }, dispatch);
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(DisplayTodosList)

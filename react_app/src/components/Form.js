@@ -49,8 +49,7 @@ class Form extends Component {
               style={{marginRight: 20}}
             />
 
-            {
-              ( isSearch && text) ?
+            {( isSearch && text) ?
               <IconButton
                 tooltip="Reset seach result"
                 onClick={ ()=>{
@@ -61,6 +60,8 @@ class Form extends Component {
               </IconButton>
               : null
             }
+
+            { this.props.statusRequest && <div className="loader"></div> }
           </div>
         </form>
       </MuiThemeProvider>
@@ -100,9 +101,10 @@ class Form extends Component {
 
 }
 
-const mapStateToProps = ({filter}) => {
+const mapStateToProps = ({todoList, filter}) => {
   return {
-    text: filter.findTodo
+    text: filter.findTodo,
+    statusRequest: todoList.getTodoListRequest,
   }
 }
 

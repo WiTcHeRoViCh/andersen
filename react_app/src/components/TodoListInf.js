@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RenderButtons from './RenderButtons';
-import { deleteCompleted } from '../actions/index';
+import { deleteCompletedFromdb } from '../actions/index';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -12,12 +12,9 @@ import '../styles/TodoListInf.css';
 class TodoListInf extends Component {
 
   render(){
-    const ActiveTodoList = this.props.todoList.filter( todo => {
-      return todo.isComplete === false;
-    });
-    const completedTodoList = this.props.todoList.filter ( todo => {
-      return todo.isComplete === true;
-    });
+    const ActiveTodoList = this.props.todoList.filter( todo => todo.isComplete === false );
+    const completedTodoList = this.props.todoList.filter ( todo => todo.isComplete === true);
+    const completedTodosId = completedTodoList.map( todo => todo.id);
     const todoListInf =
         <div id="todo-list-settings">
           <div id="active-todo-length">Items left: {ActiveTodoList.length}</div>
@@ -31,7 +28,7 @@ class TodoListInf extends Component {
                   <FlatButton
                     label="Clear completed"
                     name="clean"
-                    onClick={ () => this.props.deleteCompleted() }
+                    onClick={ () => this.props.deleteCompletedFromdb(completedTodosId) }
                   />
                   : null
               }
@@ -53,7 +50,7 @@ const mapStateToProps = ({todoList}) => {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    deleteCompleted
+    deleteCompletedFromdb
 }, dispatch);
 
 export default connect(

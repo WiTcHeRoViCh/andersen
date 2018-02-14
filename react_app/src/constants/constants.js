@@ -36,5 +36,23 @@ export default {
     SHOW_ALL: todos => todos,
     SHOW_ACTIVE: todos => todos.filter( todo => todo.isComplete === false),
     SHOW_COMPLETED: todos => todos.filter( todo => todo.isComplete === true),
-  }
+  },
+  status: {
+    request: {
+      getTodoListRequest: true,
+      getTodoListSuccess: false,
+      getTodoListFailure: false
+    },
+    success: {
+      getTodoListRequest: false,
+      getTodoListSuccess: true,
+      getTodoListFailure: false
+    },
+    failure: {
+      getTodoListRequest: false,
+      getTodoListSuccess: false,
+      getTodoListFailure: true
+    }
+}
+
 };
